@@ -1,0 +1,13 @@
+# Dossiers temporaires / caches
+__pycache__/
+*.pyc
+
+# Environnement virtuel
+venv/
+.env/
+
+# Résultats de test, logs
+*.log
+htmlcov/
+.cache/
+

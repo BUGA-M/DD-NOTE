@@ -1,0 +1,6 @@
+flake8
+bandit
+black
+customtkinter
+pillow
+tk

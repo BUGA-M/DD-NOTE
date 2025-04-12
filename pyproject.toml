@@ -1,0 +1,15 @@
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.flake8]
+max-line-length = 88
+exclude = [
+    ".git",
+    "__pycache__",
+    "venv",
+    "tests/*"
+]
+
+[tool.bandit]
+exclude = ["tests", "venv"]
