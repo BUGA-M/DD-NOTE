@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
 class CreatButton(ctk.CTkButton):
-    def __init__(self, fenter, text, width, height,
+    def __init__(self, fenter, text:str='new BUTTON',width:int=100, height:int=20,
                  command=None, corner_radius=12,
                  fg_color="blue", hover_color="darkblue",
                  border_width=0, border_color=None,
@@ -25,8 +25,8 @@ class CreatButton(ctk.CTkButton):
 
     # ➕ Méthodes utilitaires
 
-    def buttonPack(self, padx=0, pady=0, **kwargs):
-        self.pack(padx=padx, pady=pady, **kwargs)
+    def buttonPack(self, padx=0, pady=0, fill="both", expand=True, **kwargs):
+        self.pack(padx=padx, pady=pady, fill=fill, expand=expand, **kwargs)
 
     def buttonPlace(self, relx=0.5, rely=0.5, anchor="center", **kwargs):
         self.place(relx=relx, rely=rely, anchor=anchor, **kwargs)

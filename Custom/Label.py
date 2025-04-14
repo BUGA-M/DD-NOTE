@@ -15,8 +15,8 @@ class CreatLabel(ctk.CTkLabel):
 
     # ➕ Méthodes utilitaires
 
-    def LabelPack(self, padx=0, pady=0, **kwargs):
-        self.pack(padx=padx, pady=pady, **kwargs)
+    def LabelPack(self, padx=0, pady=0, fill="both", expand=True, **kwargs):
+        self.pack(padx=padx, pady=pady, fill=fill, expand=expand, **kwargs)
 
     def LabelPlace(self, relx=0.5, rely=0.5, anchor="center", **kwargs):
         self.place(relx=relx, rely=rely, anchor=anchor, **kwargs)
