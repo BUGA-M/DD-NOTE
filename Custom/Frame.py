@@ -1,7 +1,7 @@
 import customtkinter as ctk
-
-class CreatFrame(ctk.CTkFrame):
-    def __init__(self, Fenetre, width:int==300, height:int=300, bg_color,
+from .Place import Places 
+class CreatFrame(ctk.CTkFrame,Places):
+    def __init__(self, Fenetre, width:int==300, height:int=300, bg_color='transparent',
                  fg_color=None, corner_radius=15, border_width=0, border_color=None, **kwargs):
 
         super().__init__(
@@ -24,8 +24,14 @@ class CreatFrame(ctk.CTkFrame):
     def FramePack(self, padx=0, pady=0, fill="both", expand=True, **kwargs):
         self.pack(padx=padx, pady=pady, fill=fill, expand=expand, **kwargs)
 
-    def FramePlace(self, relx=0.5, rely=0.5, anchor="center", **kwargs):
-        self.place(relx=relx, rely=rely, anchor=anchor, **kwargs)
+    def FramePlace(self, relx=None, rely=None, anchor=None, **kwargs):
+        if relx is None and rely is None and anchor is None:
+            self.PlaceCenter(**kwargs)
+        else:
+            relx = relx if relx is not None else 0.5
+            rely = rely if rely is not None else 0.5
+            anchor = anchor if anchor is not None else "center"
+            self.place(relx=relx, rely=rely, anchor=anchor, **kwargs)
 
     def FrameGride(self, row=0, column=0, padx=0, pady=0, sticky="nsew", rw=1, cw=1, **kwargs):
         self.grid(row=row, column=column, padx=padx, pady=pady, sticky=sticky, **kwargs)

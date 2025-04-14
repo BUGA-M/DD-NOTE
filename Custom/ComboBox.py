@@ -1,7 +1,11 @@
 import customtkinter as ctk
 
 class CreatComboBox(ctk.CTkComboBox):
-    def __init__(self, fenetre, value=value(), width, height,
+    
+    def value():
+        return ['marouane','abdellah','youssef','imad']
+    
+    def __init__(self, fenetre, value=value(), width:int=70, height:int=40,
                  text_font="Arial", font_size=12, state="normal",
                  fg_color="black", bg_color="black",
                  dropdown_text_color=None, button_color=None, **kwargs):
@@ -21,8 +25,7 @@ class CreatComboBox(ctk.CTkComboBox):
         )
 
     # ➕ Méthodes utilitaires
-    def value():
-        return ['marouane','abdellah','youssef','imad']
+
 
     def ComboBoxPack(self, padx=0, pady=0, fill="both", expand=True, **kwargs):
         self.pack(padx=padx, pady=pady, fill=fill, expand=expand, **kwargs)
