@@ -5,4 +5,4 @@ from .Frame import CreatFrame
 from .ComboBox import CreatComboBox
 from .Font import FontInstaller
 from .Image import CreateImage
-from .Place import Places 
+from .Position import Places
