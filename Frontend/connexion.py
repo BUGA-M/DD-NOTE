@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from Custom import CreatLabel ,CreatFrame,FontInstaller,CreatButton,Places
+from Custom import CreatLabel ,CreatFrame,FontInstaller,CreatButton,Places,CreateImage
 from PIL import Image
 import os
 
@@ -16,7 +16,17 @@ class ConnexionFrame(CreatFrame):
         
         title_font = FontInstaller.get_font("Titan One")
         subtitle_font = FontInstaller.get_font("Poppins")
-    
+        type_font = FontInstaller.get_font("Orbitron")
+        
+        #self.bg_image = CreateImage("../DDnote/Custom/pic/bg8.jpg", width=self.winfo_width(), height=self.winfo_height())
+        #self.bg_label = CreatLabel(
+        #    self,
+        #    text="",
+        #    image=self.bg_image,
+        #    bg_color="transparent"
+        #)
+        #self.bg_label.LabelPlace(relwidth=1, relheight=1)
+
         self.labelTitle = CreatLabel(
             self,
             "DDnote",
@@ -31,56 +41,66 @@ class ConnexionFrame(CreatFrame):
             self,
             "Sélectionnez votre profil pour continuer",
             subtitle_font[1] - 5,
-            subtitle_font[0],
+            type_font[0],
             "#94a3b8",  
             "transparent"
         )
-        self.labelSubtitle.LabelPlace(0.5, 0.25)
+        self.labelSubtitle.LabelPlace(0.5, 0.22)
 
-        self.ligne = CreatFrame(self, 350, 2, fg_color="#475569")
-        self.ligne.FramePlace(rely=0.30)
+        self.ligne = CreatFrame(self, 385, 2, fg_color="#475569")
+        self.ligne.FramePlace(rely=0.25)
         
-        self.roles = ["Admin", "Etudiant", "Prof"]
-        self.role_icons = ["🔐", "📚", "👨"]  
+        self.roles = ["Admin", "Stagaire", "Formateur"]
+        self.path_images = ["../DDnote/Custom/pic/admin.png",
+                           "../DDnote/Custom/pic/Stagaire.png",
+                           "../DDnote/Custom/pic/Formateur.png"]  
         self.buttons = []
         
-        for i, (role, icon) in enumerate(zip(self.roles, self.role_icons)):
+        for i, (role, pic) in enumerate(zip(self.roles, self.path_images)):
             btn = CreatButton(
                 self, 
-                f"{icon}  {role}", 
+                f"{role}", 
                 270, 
                 270,  
                 fg_color='#334155',  
-                text_font=subtitle_font[0],
+                text_font=type_font[0],
                 hover_color='#0ea5e9',  
                 font_size=18,
                 border_width=1,
                 border_color='#64748b', 
-                corner_radius=10 
+                corner_radius=10 ,
+                image=CreateImage(pic),
+                compound="top",
             )
             self.buttons.append(btn)
         
         self.footer = CreatLabel(
             self,
-            Text="© 2025 DDnote - Système de gestion des notes",
-            Font_size=subtitle_font[1] -10,
+            text="© 2025 DDnote - Système de gestion des notes",
+            font_size=subtitle_font[1] - 10,
             text_font=subtitle_font[0],
             text_color="#64748b",
             bg_color="transparent"
         )
-        self.footer.LabelPlace(relx=0.5, rely=0.95, anchor="center")
+
+        self.footer.LabelPlace(relx=0.5, rely=0.98, anchor="center")
         
         self.bind("<Configure>", self.update_layout)
         
     def update_layout(self, event=None):
+        #new_width = self.winfo_width()
+        #new_height = self.winfo_height()
+        
+        #self.bg_image.configure(size=(new_width, new_height))
+         
         window_width = self.winfo_width()
 
         if window_width < 900: 
             
             for i, btn in enumerate(self.buttons):
                 
-                btn.configure(height=80)
-                btn.buttonPlace(relx=0.5, rely=0.45 + (i * 0.15), anchor="center")
+                btn.configure(height=150)
+                btn.buttonPlace(relx=0.5, rely=0.38 + (i * 0.23), anchor="center")
         else: 
             max_button_area_width = 900 
             
@@ -99,7 +119,7 @@ class ConnexionFrame(CreatFrame):
                 btn.buttonPlace(relx=relx, rely=0.6, anchor="center")
 
     def show(self):
-        self.FrameGride(padx=100, pady=10) 
+        self.FrameGride(padx=0, pady=0) 
 
 
 

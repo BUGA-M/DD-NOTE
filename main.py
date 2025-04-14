@@ -13,14 +13,15 @@ class App(ctk.CTk):
 
     def setup_window(self):
         self.geometry("1280x720")
-        self.minsize(600, 720)
+        self.minsize(500, 720)
         self.title("DDnote")
         self.config(bg="#1e293b")
 
     def install_fonts(self):
         FontInstaller.installerFont("Titan One", "Custom/db_fonts/TitanOne-Regular.ttf", 50)
         FontInstaller.installerFont("Poppins", "Custom/db_fonts/Poppins-Regular.ttf", 22)
-
+        FontInstaller.installerFont("Orbitron", "Custom/db_fonts/static/Orbitron-Bold.ttf", 22)
+        
     def load_frames(self):
         self.connexion_frame = ConnexionFrame(self)
         self.connexion_frame.show()

@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 
 class CreateImage(ctk.CTkImage):
     def __init__(self, path: str = None, lightPath: str = None, darkPath: str = None, width: int = 100, height: int = 100):
-        self.defaultImage = Path("../DDNOTE/Custom/pic/default-IMG.png").resolve()
+        self.defaultImage = Path("../DDnote/Custom/pic/default-IMG.png").resolve()
 
         self.path = path if path else self.defaultImage
         self.lightPath = lightPath if lightPath else self.path
@@ -29,6 +29,13 @@ class CreateImage(ctk.CTkImage):
             self.ico_image = ImageTk.PhotoImage(img)
         except Exception as e:
             print(f"Warning: Impossible de créer l'icône de fenêtre: {e}")
+            
+            
+    def resize(self, width, height):
+        light = Image.open(self.lightPath).resize((width, height), Image.LANCZOS)
+        dark = Image.open(self.darkPath).resize((width, height), Image.LANCZOS)
+        self.configure(light_image=light, dark_image=dark, size=(width, height))
+
 
     def as_ctk(self):
         return self

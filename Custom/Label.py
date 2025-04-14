@@ -1,15 +1,16 @@
 import customtkinter as ctk
 
 class CreatLabel(ctk.CTkLabel):
-    def __init__(self, Fenetre, Text="Par defaut", Font_size=16,
-                 text_font="Arial", text_color="white", bg_color="black", **kwargs):
+    def __init__(self, Fenetre, text="", font_size=12, text_font=None, text_color="white", bg_color="transparent", image=None, **kwargs):
+        font = (text_font, font_size) if text_font else None
 
         super().__init__(
             master=Fenetre,
-            text=Text,
-            font=(text_font, Font_size),
+            text=text,
+            font=font,
             text_color=text_color,
             bg_color=bg_color,
+            image=image,
             **kwargs
         )
 
