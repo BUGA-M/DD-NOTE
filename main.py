@@ -41,7 +41,7 @@ class ConnexionFrame(CreatFrame):
         self.ligne.place(relx=0.5, rely=0.30, anchor="center")
         
         self.roles = ["Admin", "Etudiant", "Prof"]
-        self.role_icons = ["🔐", "📚", "👨‍🏫"]  
+        self.role_icons = ["🔐", "📚", "👨"]  
         self.buttons = []
         
         for i, (role, icon) in enumerate(zip(self.roles, self.role_icons)):
@@ -75,7 +75,7 @@ class ConnexionFrame(CreatFrame):
     def update_layout(self, event=None):
         window_width = self.winfo_width()
 
-        if window_width < 800: 
+        if window_width < 900: 
             
             for i, btn in enumerate(self.buttons):
                 
