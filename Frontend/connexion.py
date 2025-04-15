@@ -9,8 +9,8 @@ class ConnexionFrame(CreatFrame):
             master,
             600,
             400,
-            "#1e293b",
-            "#1e293b", 
+            "transparent",
+            "transparent", 
             20   
         )
         
@@ -118,8 +118,10 @@ class ConnexionFrame(CreatFrame):
                 relx = start_offset + i * spacing
                 btn.buttonPlace(relx=relx, rely=0.6, anchor="center")
 
-    def show(self):
+    def showGrid(self):
         self.FrameGride(padx=0, pady=0) 
+    def showPack(self):
+        self.FramePack()
 
 
 

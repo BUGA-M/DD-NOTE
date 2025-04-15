@@ -2,7 +2,7 @@ import customtkinter as ctk
 from .Position import Places
 
 class CreatFrame(ctk.CTkFrame,Places):
-    def __init__(self, Fenetre, width:int==300, height:int=300, bg_color='transparent',
+    def __init__(self, Fenetre, width:int=300, height:int=300, bg_color='transparent',
                  fg_color=None, corner_radius=15, border_width=0, border_color=None, **kwargs):
 
         super().__init__(
