@@ -11,3 +11,6 @@ venv/
 htmlcov/
 .cache/
 
+#test files
+test/
+

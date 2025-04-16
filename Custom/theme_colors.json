@@ -25,5 +25,32 @@
         "border": "#475569",
         "footer": "#475569",
         "control_bg": "#1e293b"
+    },
+    "violet": {
+        "title": "#8b5cf6",
+        "subtitle": "#c4b5fd",
+        "button": "#5b21b6",
+        "button_hover": "#7c3aed",
+        "border": "#a78bfa",
+        "footer": "#4c1d95",
+        "control_bg": "#2e1065"
+    },
+    "red": {
+        "title": "#ef4444",
+        "subtitle": "#fca5a5",
+        "button": "#7f1d1d",
+        "button_hover": "#dc2626",
+        "border": "#fecaca",
+        "footer": "#991b1b",
+        "control_bg": "#450a0a"
+    },
+    "orange": {
+        "title": "#f97316",
+        "subtitle": "#fdba74",
+        "button": "#9a3412",
+        "button_hover": "#ea580c",
+        "border": "#fed7aa",
+        "footer": "#c2410c",
+        "control_bg": "#431407"
     }
 }
