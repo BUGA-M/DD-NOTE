@@ -3,7 +3,7 @@ import customtkinter as ctk
 class CreatButton(ctk.CTkButton):
     def __init__(self, fenter, text:str='new BUTTON',width:int=100, height:int=20,
                  command=None, corner_radius=12,
-                 fg_color="blue", hover_color="darkblue",
+                 fg_color="blue", hover_color="black",
                  border_width=0, border_color=None,
                  text_color="white", text_font="Arial", font_size=12, **kwargs):
 

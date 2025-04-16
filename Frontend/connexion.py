@@ -1,7 +1,13 @@
 import customtkinter as ctk
-from Custom import CreatLabel ,CreatFrame,FontInstaller,CreatButton,Places,CreateImage
+from Custom import CreatLabel ,CreatFrame,FontInstaller,CreatButton,Places,CreateImage,ThemeControls,ThemeManager,ThemeColors
 from PIL import Image
 import os
+
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+font_dir = os.path.join(current_dir, "fonts_installed")
+FontInstaller.set_install_path(font_dir)
+
 
 class ConnexionFrame(CreatFrame):
     def __init__(self, master):
@@ -42,7 +48,7 @@ class ConnexionFrame(CreatFrame):
             "Sélectionnez votre profil pour continuer",
             subtitle_font[1] - 5,
             type_font[0],
-            "#94a3b8",  
+            "red",  
             "transparent"
         )
         self.labelSubtitle.LabelPlace(0.5, 0.22)
@@ -87,6 +93,8 @@ class ConnexionFrame(CreatFrame):
         
         self.bind("<Configure>", self.update_layout)
         
+        self.apply_theme_colors()
+
     def update_layout(self, event=None):
         #new_width = self.winfo_width()
         #new_height = self.winfo_height()
@@ -117,12 +125,25 @@ class ConnexionFrame(CreatFrame):
             for i, btn in enumerate(self.buttons):
                 relx = start_offset + i * spacing
                 btn.buttonPlace(relx=relx, rely=0.6, anchor="center")
+    
+    def apply_theme_colors(self):
+        theme_name = ThemeManager.load_theme_preference()["color_theme"]
+        theme_data = ThemeColors.load_colors(theme_name)
+
+        self.labelTitle.configure(text_color=theme_data["title"])
+        self.labelSubtitle.configure(text_color=theme_data["subtitle"])
+        self.footer.configure(text_color=theme_data["footer"])
+
+        for btn in self.buttons:
+            btn.configure(
+                fg_color=theme_data["button"],
+                hover_color=theme_data["button_hover"],
+                border_color=theme_data["border"]
+            )
 
     def showGrid(self):
         self.FrameGride(padx=0, pady=0) 
     def showPack(self):
         self.FramePack()
-
-
 
     
