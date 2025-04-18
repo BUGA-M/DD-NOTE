@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from Frontend import ConnexionFrame
-from Custom import FontInstaller,CreatFrame,CreatLabel,CreatButton,ThemeControls,ThemeManager,ThemeColors
+from Frontend import ConnexionFrame,Apk
+from Custom import FontInstaller,CreatFrame,CreatLabel,CreatButton,ThemeControls,ThemeManager,ThemeColors,ChangeFrame
 from PIL import Image
 import json
 import os
@@ -14,7 +14,16 @@ class App(ctk.CTk):
         self.theme_config = ThemeManager.load_theme_preference()
         self.setup_window()
         self.install_fonts()
-        self.load_frames()
+        self.current_frame=None
+        self.FrameSinscrire=[
+            lambda parent:Apk(parent,"Enter your code","Enter your password","admin.csv","admin"),
+            lambda parent:Apk(parent,"Enter your email","Enter your password","Stagaire.csv","stagaire"),
+            lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","formateur")
+        ]
+        self.manager=ChangeFrame(self)
+        self.manager.show_frame(lambda parent:ConnexionFrame(parent,self.FrameSinscrire))
+        # self.load_frames()
+
 
     def setup_window(self):
         self.geometry("1280x720")
@@ -32,8 +41,10 @@ class App(ctk.CTk):
         FontInstaller.installerFont("Orbitron", "Custom/db_fonts/static/Orbitron-Bold.ttf", 22)
 
     def load_frames(self):
-        self.connexion_frame = ConnexionFrame(self)
+        self.connexion_frame = ConnexionFrame(self,self.FrameSinscrire)
         self.connexion_frame.showPack()
+        
+
 
     def recreate_app(self):
         self.quit()

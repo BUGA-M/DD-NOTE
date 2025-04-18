@@ -1,7 +1,8 @@
 import customtkinter as ctk
-from Custom import CreatLabel ,CreatFrame,FontInstaller,CreatButton,Places,CreateImage,ThemeControls,ThemeManager,ThemeColors
+from Custom import CreatLabel ,CreatFrame,FontInstaller,CreatButton,Places,CreateImage,ThemeControls,ThemeManager,ThemeColors,ChangeFrame
 from PIL import Image
 import os
+from pathlib import Path
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,7 +11,7 @@ FontInstaller.set_install_path(font_dir)
 
 
 class ConnexionFrame(CreatFrame):
-    def __init__(self, master):
+    def __init__(self, master,FrameSinscrire):
         super().__init__(
             master,
             600,
@@ -19,7 +20,7 @@ class ConnexionFrame(CreatFrame):
             "transparent", 
             20   
         )
-        
+        self.FrameSinscrire=FrameSinscrire
         title_font = FontInstaller.get_font("Titan One")
         subtitle_font = FontInstaller.get_font("Poppins")
         type_font = FontInstaller.get_font("Orbitron")
@@ -57,12 +58,14 @@ class ConnexionFrame(CreatFrame):
         self.ligne.FramePlace(rely=0.25)
         
         self.roles = ["Admin", "Stagaire", "Formateur"]
-        self.path_images = ["../DDnote/Custom/pic/admin.png",
-                           "../DDnote/Custom/pic/Stagaire.png",
-                           "../DDnote/Custom/pic/Formateur.png"]  
+
+        self.path_images = [Path("./Custom/pic/admin.png").resolve(),
+                            Path("./Custom/pic/Stagaire.png").resolve(),
+                            Path("./Custom/pic/Formateur.png").resolve()
+                            ] 
         self.buttons = []
         
-        for i, (role, pic) in enumerate(zip(self.roles, self.path_images)):
+        for i, (role, pic, sinc) in enumerate(zip(self.roles, self.path_images,self.FrameSinscrire)):
             btn = CreatButton(
                 self, 
                 f"{role}", 
@@ -75,8 +78,9 @@ class ConnexionFrame(CreatFrame):
                 border_width=1,
                 border_color='#64748b', 
                 corner_radius=10 ,
-                image=CreateImage(pic),
+                image=CreateImage(str(pic)),
                 compound="top",
+                command=lambda frame=sinc : master.manager.show_frame(frame)
             )
             self.buttons.append(btn)
         
@@ -125,7 +129,7 @@ class ConnexionFrame(CreatFrame):
             for i, btn in enumerate(self.buttons):
                 relx = start_offset + i * spacing
                 btn.buttonPlace(relx=relx, rely=0.6, anchor="center")
-    
+        self.showPack()
     def apply_theme_colors(self):
         theme_name = ThemeManager.load_theme_preference()["color_theme"]
         theme_data = ThemeColors.load_colors(theme_name)
