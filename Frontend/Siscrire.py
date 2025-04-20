@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import messagebox
 import csv
+from Frontend.ForgetPassword import ForgetPassword
 from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame
 
 class Apk(CreatFrame):
@@ -9,7 +10,7 @@ class Apk(CreatFrame):
             master,
             450,
             450,
-            "transparent",
+            "#1e293b",
             "#343A40", 
             20   
         )
@@ -42,7 +43,7 @@ class Apk(CreatFrame):
         self.buttonConnect.buttonPlace(0.5,0.76,"center")
         self.buttonConnect.buttonConfig(font=(type_font,14,"bold"))
 
-        self.ForgetPwConnect=CreatButton(self,"Forget Password ?",160,26,"#",6,"transparent","#2C3440")
+        self.ForgetPwConnect=CreatButton(self,"Forget Password ?",160,26,lambda : self.change_to_otp(),6,"transparent","#2C3440")
         self.ForgetPwConnect.buttonPlace(0.5,0.86,"center")
         self.ForgetPwConnect.buttonConfig(bg_color="#343A40",font=(type_font,13,"bold"),text_color="#AAAAAA")
 
@@ -74,6 +75,11 @@ class Apk(CreatFrame):
                                 return messagebox.showerror("Erreur","Incorrect CIN or password")
                             case "stagaire":
                                 return messagebox.showerror("Erreur","Incorrect id or password")
+
+    def change_to_otp(self):
+        self.destroy()
+        manager = ChangeFrame(self.master)
+        manager.show_frame(lambda parent: ForgetPassword(parent, "test.csv", "proof"))
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")
 
