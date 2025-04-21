@@ -11,7 +11,7 @@ import threading
 
 class OTP(CreatFrame):
     def __init__(self, master, NameDateBase, type):
-        super().__init__(master, 450, 450, "#1e293b", "#343A40", 20)
+        super().__init__(master, 450, 450, "transparent", "#343A40", 20)
         self.type = type
         self.datebase = NameDateBase
         self.title_font = FontInstaller.get_font("Titan One")

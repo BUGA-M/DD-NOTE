@@ -6,12 +6,13 @@ import customtkinter as ctk
 from tkinter import messagebox
 from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame
 from Frontend.OTP import OTP
+from Frontend.connexion import ConnexionFrame
 import csv
 
 
 class ForgetPassword(CreatFrame):
     def __init__(self,master,NameDateBase,type):
-        super().__init__(master,450,450,"#1e293b","#343A40",20)
+        super().__init__(master,450,450,"transparent","#343A40",20)
         self.type=type
         self.datebase=NameDateBase
         self.title_font = FontInstaller.get_font("Titan One")
@@ -41,7 +42,7 @@ class ForgetPassword(CreatFrame):
         self.buttonConnect.buttonPlace(0.5,0.63,"center")
         self.buttonConnect.buttonConfig(font=(self.type_font,14,"bold"))
 
-        self.buttonRetourSign=CreatButton(self,"Back To Sign in",160,35,"#",6,"transparent","#2C3440")
+        self.buttonRetourSign=CreatButton(self,"Back To Sign in",160,35,self.change_to_main,6,"transparent","#2C3440")
         self.buttonRetourSign.buttonPlace(0.5,0.76,"center")
         self.buttonRetourSign.buttonConfig(font=(self.type_font,14))
 
@@ -54,11 +55,20 @@ class ForgetPassword(CreatFrame):
             bg_color="transparent"
         )
         self.show_Frame()
-        
-
+    
+    def change_to_main(self):
+        from Frontend import Apk
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        if self.type=="admin":
+            manager.show_frame(lambda parent:Apk(parent,"Enter your code","Enter your password","admin.csv","admin"))
+        elif self.type=="Stagaire":
+            manager.show_frame(lambda parent:Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
+        elif self.type=="Formateur":
+            manager.show_frame(lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","Formateur"))
     def change_to_otp(self):
         self.destroy()
-        manager = ChangeFrame(self.master)
+        manager=ChangeFrame(self.master)
         manager.show_frame(lambda parent: OTP(parent, "test.csv", "proof"))
 
 
@@ -122,9 +132,7 @@ class ForgetPassword(CreatFrame):
             messagebox.showinfo("Succès","Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {e}")
-    def destroy_and_change_frame(self,current_frame,change_manager):
-        current_frame.destroy()
-        current_frame.after(10, lambda: change_manager.show_frame(lambda parent: OTP(parent, "test.csv", "proof")))
+
 
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")

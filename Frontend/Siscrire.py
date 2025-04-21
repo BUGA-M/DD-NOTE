@@ -10,7 +10,7 @@ class Apk(CreatFrame):
             master,
             450,
             450,
-            "#1e293b",
+            "transparent",
             "#343A40", 
             20   
         )
@@ -79,7 +79,7 @@ class Apk(CreatFrame):
     def change_to_otp(self):
         self.destroy()
         manager = ChangeFrame(self.master)
-        manager.show_frame(lambda parent: ForgetPassword(parent, "test.csv", "proof"))
+        manager.show_frame(lambda parent: ForgetPassword(parent, "test.csv", self.type))
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")
 

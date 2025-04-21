@@ -17,8 +17,8 @@ class App(ctk.CTk):
         self.current_frame=None
         self.FrameSinscrire=[
             lambda parent:Apk(parent,"Enter your code","Enter your password","admin.csv","admin"),
-            lambda parent:Apk(parent,"Enter your email","Enter your password","Stagaire.csv","stagaire"),
-            lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","formateur")
+            lambda parent:Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"),
+            lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","Formateur")
         ]
         self.manager=ChangeFrame(self)
         self.manager.show_frame(lambda parent:ConnexionFrame(parent,self.FrameSinscrire))
