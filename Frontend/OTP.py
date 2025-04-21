@@ -8,7 +8,7 @@ from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,Fo
 import csv
 import time
 import threading
-
+import re
 class OTP(CreatFrame):
     def __init__(self, master, NameDateBase, type):
         super().__init__(master, 450, 450, "transparent", "#343A40", 20)
@@ -60,9 +60,7 @@ class OTP(CreatFrame):
                 font=(self.type_font,18,"bold")
             )
             entry.grid(row=0,column=i,padx=5)
-            # entry.bind("<KeyRelease>", lambda e, index=i: self.move_to_next(e, index))
-            # entry.bind("<BackSpace>", lambda e, index=i: self.handle_backspace(e, index))
-            # entry.bind("<FocusIn>", lambda e, index=i: self.on_entry_click(index))
+            entry.bind("<KeyRelease>", lambda e, index=i: self.move_to_next(e, index))
             self.otp_entries.append(entry)
         
         self.otp_entries[0].focus_set()
@@ -200,7 +198,19 @@ class OTP(CreatFrame):
         except:
             pass
             
-    
+    def move_to_next(self,event,index):
+        if not self.timer_running or self.time_left <= 0:
+            return
+            
+        entry=self.otp_entries[index]
+        value=entry.get()
+        if value and not re.match(r"^\d$",value):
+            entry.delete(0,"end")
+            return
+        if value and index< 5:
+            self.otp_entries[index+1].focus_set()
+        elif value and index == 5:
+            self.Verification_OTP()
     def Verification_OTP(self):
         with open("FicherVerf.csv","r",newline='',encoding='utf-8') as ficher:
             count=csv.reader(ficher,delimiter=';')
