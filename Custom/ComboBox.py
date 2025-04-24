@@ -2,10 +2,9 @@ import customtkinter as ctk
 
 class CreatComboBox(ctk.CTkComboBox):
     
-    def value():
-        return ['marouane','abdellah','youssef','imad']
     
-    def __init__(self, fenetre, value=value(), width:int=70, height:int=40,
+    
+    def __init__(self, fenetre, value=None, width:int=70, height:int=40,
                  text_font="Arial", font_size=12, state="normal",
                  fg_color="black", bg_color="black",
                  dropdown_text_color=None, button_color=None, **kwargs):

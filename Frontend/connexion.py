@@ -80,7 +80,7 @@ class ConnexionFrame(CreatFrame):
                 corner_radius=10 ,
                 image=CreateImage(str(pic)),
                 compound="top",
-                command=lambda frame=sinc : master.manager.show_frame(frame)
+                command=lambda : self.change_to_accueil(sinc)
             )
             self.buttons.append(btn)
         
@@ -99,12 +99,7 @@ class ConnexionFrame(CreatFrame):
         
         self.apply_theme_colors()
 
-    def update_layout(self, event=None):
-        #new_width = self.winfo_width()
-        #new_height = self.winfo_height()
-        
-        #self.bg_image.configure(size=(new_width, new_height))
-         
+    def update_layout(self, event=None):         
         window_width = self.winfo_width()
 
         if window_width < 900: 
@@ -130,6 +125,12 @@ class ConnexionFrame(CreatFrame):
                 relx = start_offset + i * spacing
                 btn.buttonPlace(relx=relx, rely=0.6, anchor="center")
         self.showPack()
+    def change_to_accueil(self,FrameSinscrire1):
+        from Frontend.Siscrire import Apk
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        manager.show_frame(FrameSinscrire1)
+    
     def apply_theme_colors(self):
         theme_name = ThemeManager.load_theme_preference()["color_theme"]
         theme_data = ThemeColors.load_colors(theme_name)

@@ -4,10 +4,11 @@ import ssl
 import random
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage
 from Frontend.OTP import OTP
 from Frontend.connexion import ConnexionFrame
 import csv
+from pathlib import Path
 
 
 class ForgetPassword(CreatFrame):
@@ -23,6 +24,13 @@ class ForgetPassword(CreatFrame):
         self.creatforget()
    
     def creatforget(self):
+        self.pathReturn=Path("./Custom/pic/return.png").resolve()
+        self.picReturn=CreateImage(str(self.pathReturn),width=20,height=20)
+
+        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_connexion,fg_color="transparent",hover_color="blue")
+        self.returnButton.buttonPlace(0.1,0.1,"center")
+        self.returnButton.buttonConfig(font=(self.type_font,14,"bold"))
+
         self.labeltitel=CreatLabel(self,"Forget Password",28,self.title_font[0],"#3b82f6","transparent")
         self.labeltitel.LabelPlace(0.5,0.17,"center")
         self.labeltitel.LabelConfig(font=(self.title_font[0],29,"bold"))
@@ -42,11 +50,18 @@ class ForgetPassword(CreatFrame):
         self.buttonConnect.buttonPlace(0.5,0.63,"center")
         self.buttonConnect.buttonConfig(font=(self.type_font,14,"bold"))
 
-        self.buttonRetourSign=CreatButton(self,"Back To Sign in",160,35,self.change_to_main,6,"transparent","#2C3440")
-        self.buttonRetourSign.buttonPlace(0.5,0.76,"center")
-        self.buttonRetourSign.buttonConfig(font=(self.type_font,14))
+        self.ligne_left=CreatFrame(self,80,2,fg_color="#475569")
+        self.ligne_left.FramePlace(0.37,0.73,"center")
+        
+        self.LabelOu=CreatLabel(self,"OU",text_font=self.subtitle_font,text_color="#B0B0B0")
+        self.LabelOu.LabelPlace(0.5,0.73,"center")
 
-        self.footer = CreatLabel(
+        self.ligne_right=CreatFrame(self,80,2,fg_color="#475569")
+        self.ligne_right.FramePlace(0.63,0.73,"center")
+
+        self.buttonAccountCreat=CreatButton(self,"Créer un compte",120,35,self.change_to_Inscrire,6,"transparent","#2C3440",text_color="#4299e1")
+        self.buttonAccountCreat.buttonPlace(0.5,0.8,"center")
+        self.footer=CreatLabel(
             self,
             text="© 2025 DDnote - Système de gestion des notes",
             font_size=11,
@@ -54,9 +69,17 @@ class ForgetPassword(CreatFrame):
             text_color="#64748b",
             bg_color="transparent"
         )
+
+        self.footer.LabelPlace(relx=0.5,rely=0.90,anchor="center")
         self.show_Frame()
     
-    def change_to_main(self):
+    def change_to_Inscrire(self):
+        from Frontend.CreatAccount import CreatAccount
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        manager.show_frame(lambda parent: CreatAccount(parent))
+    
+    def change_to_connexion(self):
         from Frontend import Apk
         self.destroy()
         manager=ChangeFrame(self.master)
@@ -70,7 +93,6 @@ class ForgetPassword(CreatFrame):
         self.destroy()
         manager=ChangeFrame(self.master)
         manager.show_frame(lambda parent: OTP(parent, "test.csv", "proof"))
-
 
     def checkEmail(self):
         Email=self.EntryEmail.get().strip()

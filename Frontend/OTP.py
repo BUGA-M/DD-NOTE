@@ -9,6 +9,7 @@ import csv
 import time
 import threading
 import re
+from Frontend.Change_Password import CreatChangePassword
 class OTP(CreatFrame):
     def __init__(self, master, NameDateBase, type):
         super().__init__(master, 450, 450, "transparent", "#343A40", 20)
@@ -38,10 +39,10 @@ class OTP(CreatFrame):
             font=ctk.CTkFont(family="Arial", size=12, weight="bold"),
             text_color="#e53e3e"
         )
-        self.timer_label.place(relx=0.5,rely=0.4,anchor="center")
+        self.timer_label.place(relx=0.5,rely=0.39,anchor="center")
         self.entry_frame=CreatFrame(self)
         self.entry_frame.FrameConfig(fg_color="transparent")
-        self.entry_frame.FramePlace(0.5,0.52,"center")
+        self.entry_frame.FramePlace(0.5,0.49,"center")
 
         self.otp_entries=[]
         for i in range(6):
@@ -60,7 +61,7 @@ class OTP(CreatFrame):
                 font=(self.type_font,18,"bold")
             )
             entry.grid(row=0,column=i,padx=5)
-            entry.bind("<KeyRelease>", lambda e, index=i: self.move_to_next(e, index))
+            entry.bind("<KeyRelease>", lambda e, index=i: self.move_to_next(e,index))
             self.otp_entries.append(entry)
         
         self.otp_entries[0].focus_set()
@@ -76,12 +77,14 @@ class OTP(CreatFrame):
             "#2C3440",
             text_color="#4299e1",
         )
-        self.resend_link.place(relx=0.5,rely=0.65,anchor="center")
+        self.resend_link.place(relx=0.5,rely=0.61,anchor="center")
 
         self.buttonVerif=CreatButton(self,"Vérifier",350,35,lambda : self.Verification_OTP())
-        self.buttonVerif.buttonPlace(0.5,0.77,"center")
+        self.buttonVerif.buttonPlace(0.5,0.71,"center")
         self.buttonVerif.buttonConfig(font=(self.type_font,14,"bold"))
 
+        self.buttonAccueil=CreatButton(self,"Revenir à l'écran d'accueil",120,35,lambda : self.returnAccueil,6,"transparent","#2C3440",text_color="#4299e1")
+        self.buttonAccueil.buttonPlace(0.5,0.82,"center")
         self.footer=CreatLabel(
             self,
             text="© 2025 DDnote - Système de gestion des notes",
@@ -94,6 +97,18 @@ class OTP(CreatFrame):
         self.footer.LabelPlace(relx=0.5,rely=0.90,anchor="center")
         self.start_timer()
         self.show_Frame()
+    
+    def returnAccueil(self):
+        from Frontend.connexion import ConnexionFrame
+        from Frontend.Siscrire import Apk
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        FrameSinscrire=[
+            lambda parent:Apk(parent,"Enter your code","Enter your password","admin.csv","admin"),
+            lambda parent:Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"),
+            lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","Formateur")
+        ]
+        manager.show_frame(lambda parent: ConnexionFrame(parent,FrameSinscrire))
     
     def sendEmail(self,Email_receiver):
         email_sendaire='imadbenh255@gmail.com'
@@ -211,6 +226,7 @@ class OTP(CreatFrame):
             self.otp_entries[index+1].focus_set()
         elif value and index == 5:
             self.Verification_OTP()
+    
     def Verification_OTP(self):
         with open("FicherVerf.csv","r",newline='',encoding='utf-8') as ficher:
             count=csv.reader(ficher,delimiter=';')
@@ -232,13 +248,16 @@ class OTP(CreatFrame):
         if otp_code==Code:
             self.timer_running=False
             messagebox.showinfo("Succès","Code OTP vérifié avec succès!")
-            self.destroy()
+            self.change_to_chnagePass()
         else:
             messagebox.showerror("error","Code OTP incorrect.")
             for entry in self.otp_entries:
                 entry.delete(0, "end")
             self.otp_entries[0].focus_set()
             return
-
+    def change_to_chnagePass(self):
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        manager.show_frame(lambda parent: CreatChangePassword(parent, "test.csv", "proof","imad"))
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")
