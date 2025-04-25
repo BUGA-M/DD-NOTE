@@ -22,7 +22,7 @@ class CreatAccount(CreatFrame):
             550,
             550,
             "transparent",
-            "#343A40", 
+            self.theme_data["button"], 
             20   
         )
         self.title_font=FontInstaller.get_font("Titan One")
@@ -36,19 +36,19 @@ class CreatAccount(CreatFrame):
         self.pathReturn=Path("./Custom/pic/return.png").resolve()
         self.picReturn=CreateImage(str(self.pathReturn),width=20,height=20)
 
-        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_accueil,fg_color="transparent",hover_color="blue")
-        self.returnButton.buttonPlace(0.1,0.1,"center")
+        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_accueil,fg_color=self.theme_data["title"])
+        self.returnButton.buttonPlace(0.06,0.06,"center")
         self.returnButton.buttonConfig(font=(self.type_font,14,"bold"))
 
 
-
-        self.LabelSinscrire=CreatLabel(self,"S'inscrire",30,self.title_font,"#3b82f6","transparent")
+        self.LabelSinscrire=CreatLabel(self,"S'inscrire",30)
         self.LabelSinscrire.LabelPlace(0.5,0.09,"center")
         self.LabelSinscrire.LabelConfig(font=(self.title_font[0],29,"bold"))
-        self.ligne=CreatFrame(self,385,2,fg_color="#475569")
+        
+        self.ligne=CreatFrame(self,385,2,fg_color="#dfdddb")
         self.ligne.FramePlace(rely=0.14)
 
-        self.subtitle=CreatLabel(self,"Bienvenue! Remplissez les champs selon présents dans votre identifiant",13,self.subtitle_font,"#B0B0B0","#343A40")
+        self.subtitle=CreatLabel(self,"Bienvenue! Remplissez les champs",13,self.subtitle_font,"#B0B0B0","transparent")
         self.subtitle.LabelPlace(0.5,0.19,"center")
         self.subtitle.LabelConfig(font=(self.subtitle,13,"bold"))
 
@@ -84,7 +84,7 @@ class CreatAccount(CreatFrame):
     
         self.buttonConnect=CreatButton(self,"Valide",485,35,command=self.valide_formulaire)
         self.buttonConnect.buttonPlace(0.5,0.80,"center")
-        self.buttonConnect.buttonConfig(font=(self.type_font,14,"bold"))
+        self.buttonConnect.buttonConfig(font=(self.type_font,14,"bold"),fg_color=self.theme_data["title"])
 
         self.ConnecteAccount=CreatButton(self,"Vous avez un compte ? Connectez-vous ici",text_color="#B0B0B0",hover_color="#2C3440",fg_color="transparent",corner_radius=7,height=30,command=self.change_to_connecte)
         self.ConnecteAccount.buttonPlace(0.5,0.87,"center")
@@ -95,15 +95,15 @@ class CreatAccount(CreatFrame):
             text="© 2025 DDnote - Système de gestion des notes",
             font_size=11,
             text_font=self.subtitle_font[0],
-            text_color="#64748b",
+            text_color="white",
             bg_color="transparent"
         )
 
-        self.footer.LabelPlace(relx=0.5,rely=0.93,anchor="center")
+        self.footer.LabelPlace(relx=0.5,rely=0.95,anchor="center")
         self.show_Frame()
 
     def on_entre(self,event):
-        self.ConnecteAccount.buttonConfig(text_color="#3b82f6")
+        self.ConnecteAccount.buttonConfig(text_color=self.theme_data["text"])
    
     def on_leave(self,event):
         self.ConnecteAccount.buttonConfig(text_color="#B0B0B0")

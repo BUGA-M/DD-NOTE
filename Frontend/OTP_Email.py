@@ -16,7 +16,7 @@ class OTP_Email(CreatFrame):
     def __init__(self, master, NameDateBase, type):
         self.theme_name = ThemeManager.load_theme_preference()["color_theme"]
         self.theme_data = ThemeColors.load_colors(self.theme_name)
-        super().__init__(master, 450, 450, "transparent", "#343A40", 20)
+        super().__init__(master, 450, 450, "transparent", self.theme_data["button"], 20)
         self.type = type
         self.datebase = NameDateBase
         self.title_font = FontInstaller.get_font("Titan One")
@@ -26,14 +26,14 @@ class OTP_Email(CreatFrame):
         self.timer_running = False
         self.CreatInterfaceOTP()
     def CreatInterfaceOTP(self):
-        self.title_label=CreatLabel(self,"Vérifier le code",28,self.title_font[0],"#3b82f6","transparent")
+        self.title_label=CreatLabel(self,"Vérifier le code",28,"transparent")
         self.title_label.LabelPlace(0.5,0.17,"center")
         self.title_label.LabelConfig(font=(self.title_font[0],29,"bold"))
 
-        self.ligne=CreatFrame(self,385,2,fg_color="#475569")
+        self.ligne=CreatFrame(self,385,2,fg_color="#dfdddb")
         self.ligne.FramePlace(0.5,0.26,"center")
 
-        self.otp_sub=CreatLabel(self,"Veuillez saisir le code de vérification à 6 chiffres",12,self.subtitle_font,"#B0B0B0","#343A40")
+        self.otp_sub=CreatLabel(self,"Veuillez saisir le code de vérification à 6 chiffres",12,self.subtitle_font,"#B0B0B0","transparent")
         self.otp_sub.LabelPlace(0.5,0.32,"center")
 
 
@@ -41,12 +41,12 @@ class OTP_Email(CreatFrame):
             self,
             text="Temps restant: 05:00",
             font=ctk.CTkFont(family="Arial", size=12, weight="bold"),
-            text_color="#e53e3e"
+            text_color=self.theme_data["text"]
         )
-        self.timer_label.place(relx=0.5,rely=0.39,anchor="center")
+        self.timer_label.place(relx=0.5,rely=0.42,anchor="center")
         self.entry_frame=CreatFrame(self)
         self.entry_frame.FrameConfig(fg_color="transparent")
-        self.entry_frame.FramePlace(0.5,0.49,"center")
+        self.entry_frame.FramePlace(0.5,0.54,"center")
 
         self.otp_entries=[]
         for i in range(6):
@@ -55,10 +55,11 @@ class OTP_Email(CreatFrame):
                 40,
                 45,
                 8,
-                2,
+                1,
                 justify="center",
                 placeholder_text="",
-                fg_color="#343A40",
+                fg_color=self.theme_data["title"],
+                border_color="black",
                 text_color="white"
             )
             entry.EntryConfig(
@@ -78,33 +79,35 @@ class OTP_Email(CreatFrame):
             lambda : self.rensend_code(),
             6,
             "transparent",
-            "#2C3440",
-            text_color="#4299e1",
+            text_color=self.theme_data["text"],
         )
-        self.resend_link.place(relx=0.5,rely=0.61,anchor="center")
+        self.resend_link.place(relx=0.5,rely=0.81,anchor="center")
 
         self.buttonVerif=CreatButton(self,"Vérifier",350,35,lambda : self.Verification_OTP())
         self.buttonVerif.buttonPlace(0.5,0.71,"center")
-        self.buttonVerif.buttonConfig(font=(self.type_font,14,"bold"))
+        self.buttonVerif.buttonConfig(font=(self.type_font,14,"bold"),fg_color=self.theme_data["title"])
 
-        self.buttonAccueil=CreatButton(self,"Revenir à l'écran d'accueil",120,35,lambda : self.returnAccueil,6,"transparent","#2C3440",text_color="#4299e1")
-        self.buttonAccueil.buttonPlace(0.5,0.82,"center")
+        #self.buttonAccueil=CreatButton(self,"Revenir à l'écran d'accueil",120,35,lambda : self.returnAccueil,6,"transparent","#2C3440",text_color="#4299e1")
+        #self.buttonAccueil.buttonPlace(0.5,0.82,"center")
+        
         self.footer=CreatLabel(
             self,
             text="© 2025 DDnote - Système de gestion des notes",
             font_size=11,
             text_font=self.subtitle_font[0],
-            text_color="#64748b",
+            text_color="white",
             bg_color="transparent"
         )
 
-        self.footer.LabelPlace(relx=0.5,rely=0.90,anchor="center")
+        self.footer.LabelPlace(relx=0.5,rely=0.95,anchor="center")
         self.start_timer()
         self.show_Frame()
     
     def returnAccueil(self):
         from Frontend.connexion import ConnexionFrame
         from Frontend.Siscrire import Apk
+        self.time_left = 300
+        self.timer_running = False
         self.destroy()
         manager=ChangeFrame(self.master)
         FrameSinscrire=[
