@@ -9,6 +9,8 @@ from Frontend.OTP import OTP
 from Frontend.connexion import ConnexionFrame
 import csv
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
 
 class ForgetPassword(CreatFrame):
@@ -143,8 +145,9 @@ class ForgetPassword(CreatFrame):
         import random
         import csv
 
-        email_sendaire = 'imadbenh255@gmail.com'
-        email_password = 'gseldpmyibzsmpli'
+        load_dotenv()
+        email_sendaire = os.getenv("EMAIL_SENDER")
+        email_password = os.getenv("EMAIL_PASSWORD")
         email_receiver = Email_receiver
 
         Subject = "Votre Code de Vérification - DD-NOTE-OFPPT"

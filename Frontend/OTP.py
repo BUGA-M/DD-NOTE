@@ -11,6 +11,8 @@ import threading
 import re
 from Frontend.Change_Password import CreatChangePassword
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
 class OTP(CreatFrame):
     def __init__(self, master, NameDateBase, type):
@@ -130,8 +132,9 @@ class OTP(CreatFrame):
         manager.show_frame(lambda parent: ForgetPassword(parent, "test.csv", self.type))
     
     def sendEmail(self, Email_receiver):
-        email_sender = 'imadbenh255@gmail.com'
-        email_password = 'gseldpmyibzsmpli'
+        load_dotenv()
+        email_sender = os.getenv("EMAIL_SENDER")
+        email_password = os.getenv("EMAIL_PASSWORD")
         email_receiver = Email_receiver
 
         Subject = "Votre Code de Vérification - DD-NOTE-OFPPT"

@@ -15,3 +15,5 @@ htmlcov/
 test/
 */test/
 **/test/
+
+.env
