@@ -30,7 +30,7 @@ class ThemeManager:
 
     @classmethod
     def load_theme_preference(cls):
-        default_prefs = {"theme": "system", "color_theme": "blue"}
+        default_prefs = {"theme": "system", "color_theme": "dark-blue"}
         try:
             if os.path.exists(cls.CONFIG_FILE):
                 with open(cls.CONFIG_FILE, 'r') as f:
@@ -58,8 +58,11 @@ class ThemeControls:
         self._build_ui()
 
     def _build_ui(self):
+        self.theme_name = ThemeManager.load_theme_preference()["color_theme"]
+        self.theme_data = ThemeColors.load_colors(self.theme_name)
+        
         # Charge les couleurs du thème actuel (pas celles sélectionnées)
-        self.theme_data = ThemeColors.load_colors(self.color_theme_var.get())
+        #self.theme_data = ThemeColors.load_colors(self.color_theme_var.get())
 
         self.control_frame = CreatFrame(
             self.master,
@@ -73,14 +76,16 @@ class ThemeControls:
         CreatLabel(self.control_frame, text="Appearance Mode:").grid(row=0, column=0, padx=10, pady=5)
         self.theme_menu = ctk.CTkOptionMenu(
             self.control_frame, values=["system", "light", "dark"],
-            variable=self.theme_var, command=self.change_theme
+            variable=self.theme_var, command=self.change_theme,
+            fg_color=self.theme_data["ctrl_theme"], button_color=self.theme_data["ctrl_theme"],text_color="white", button_hover_color=self.theme_data["ctrl_theme"] 
         )
         self.theme_menu.grid(row=0, column=1, padx=10, pady=5)
 
         CreatLabel(self.control_frame, text="Color Theme:").grid(row=0, column=2, padx=10, pady=5)
         self.color_menu = ctk.CTkOptionMenu(
-            self.control_frame, values=["blue", "green", "dark-blue"],
-            variable=self.color_theme_var, command=self.change_color_theme
+            self.control_frame, values=["blue", "green", "dark-blue","orange","red","violet","rose"],
+            variable=self.color_theme_var, command=self.change_color_theme,
+            fg_color=self.theme_data["ctrl_theme"], button_color=self.theme_data["ctrl_theme"],text_color="white", button_hover_color=self.theme_data["ctrl_theme"] 
         )
         self.color_menu.grid(row=0, column=3, padx=10, pady=5)
 

@@ -4,7 +4,7 @@ import ssl
 import random
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, FontInstaller, ChangeFrame
+from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, FontInstaller, ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
 from Frontend.connexion import ConnexionFrame
 import csv, re, os
 
@@ -27,7 +27,9 @@ def validate_password(password, confirm_password):
 
 class CreatChangePassword(CreatFrame):
     def __init__(self, master, NameDateBase, type, email=None):
-        super().__init__(master, 450, 450, "transparent", "#343A40", 20)
+        self.theme_name = ThemeManager.load_theme_preference()["color_theme"]
+        self.theme_data = ThemeColors.load_colors(self.theme_name)
+        super().__init__(master, 450, 450, "transparent", self.theme_data["button"], 20)
         self.type = type
         self.datebase = NameDateBase
         self.email = email
@@ -37,14 +39,14 @@ class CreatChangePassword(CreatFrame):
         self.CreatInterfacePass()
 
     def CreatInterfacePass(self):
-        self.labeltitel = CreatLabel(self, "Change Password", 28, self.title_font[0], "#3b82f6", "transparent")
+        self.labeltitel = CreatLabel(self, "Changer Mot De Passe", 28, self.title_font[0])
         self.labeltitel.LabelPlace(0.5, 0.17, "center")
         self.labeltitel.LabelConfig(font=(self.title_font[0], 29, "bold"))
 
-        self.ligne = CreatFrame(self, 385, 2, fg_color="#475569")
+        self.ligne = CreatFrame(self, 385, 2, fg_color="#dfdddb")
         self.ligne.FramePlace(0.5, 0.26, "center")
 
-        self.passNou_sub = CreatLabel(self, "Veuillez entrer votre nouveau mot de passe.", 12, self.subtitle_font, "#B0B0B0", "#343A40")
+        self.passNou_sub = CreatLabel(self, "Veuillez entrer votre nouveau mot de passe.", 12, self.subtitle_font, self.theme_data["text"], "transparent")
         self.passNou_sub.LabelPlace(0.5, 0.32, "center")
 
         self.NouvPassword = CreatEntry(self, 350, 44)
@@ -57,17 +59,17 @@ class CreatChangePassword(CreatFrame):
 
         self.buttonConnect = CreatButton(self, "Valide", 350, 35)
         self.buttonConnect.buttonPlace(0.5, 0.78, "center")
-        self.buttonConnect.buttonConfig(font=(self.type_font, 14, "bold"), command="")
+        self.buttonConnect.buttonConfig(font=(self.type_font, 14, "bold"), command="",fg_color=self.theme_data["title"])
 
         self.footer = CreatLabel(
             self,
             text="© 2025 DDnote - Système de gestion des notes",
             font_size=11,
             text_font=self.subtitle_font[0],
-            text_color="#64748b",
+            text_color="white",
             bg_color="transparent"
         )
-        self.footer.LabelPlace(relx=0.5, rely=0.93, anchor="center")
+        self.footer.LabelPlace(relx=0.5, rely=0.95, anchor="center")
         self.show_Frame()
 
     # def valide_password(self):

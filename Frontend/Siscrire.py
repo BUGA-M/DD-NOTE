@@ -2,17 +2,19 @@ import customtkinter as ctk
 from tkinter import messagebox
 import csv
 from Frontend.ForgetPassword import ForgetPassword
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
 from pathlib import Path
 
 class Apk(CreatFrame):
     def __init__(self,master,Entrykey,password,NameDateBase,type):
+        self.theme_name = ThemeManager.load_theme_preference()["color_theme"]
+        self.theme_data = ThemeColors.load_colors(self.theme_name)
         super().__init__(
             master,
             450,
-            450,
+            500,
             "transparent",
-            "#343A40", 
+            self.theme_data["button"], 
             20   
         )
         self.entry_key=Entrykey
@@ -28,18 +30,18 @@ class Apk(CreatFrame):
         self.pathReturn=Path("./Custom/pic/return.png").resolve()
         self.picReturn=CreateImage(str(self.pathReturn),width=20,height=20)
 
-        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_accueil,fg_color="transparent",hover_color="blue")
-        self.returnButton.buttonPlace(0.1,0.1,"center")
+        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_accueil,fg_color=self.theme_data["title"])
+        self.returnButton.buttonPlace(0.09,0.08,"center")
         self.returnButton.buttonConfig(font=(type_font,14,"bold"))
 
-        self.LabelConnect=CreatLabel(self,"Ce connecter",30,title_font,"#3b82f6")
-        self.LabelConnect.LabelConfig(bg_color="#343A40")
+        self.LabelConnect=CreatLabel(self,"Ce connecter",30,title_font)
+        #self.LabelConnect.LabelConfig(bg_color="#343A40")
         self.LabelConnect.LabelPlace(0.5,0.15,"center")
 
-        self.ligne=CreatFrame(self,385,2,fg_color="#475569")
+        self.ligne=CreatFrame(self,385,2,fg_color="#dfdddb")
         self.ligne.FramePlace(0.5,0.22,"center")
 
-        self.subtitle=CreatLabel(self,"Bienvenue! Veuillez saisir vos coordonnées",13,subtitle_font,"#B0B0B0","#343A40")
+        self.subtitle=CreatLabel(self,"Bienvenue! Veuillez saisir vos coordonnées",13,subtitle_font,"#B0B0B0","transparent")
         self.subtitle.LabelPlace(0.5,0.27,"center")
 
         self.Entrykey=CreatEntry(self,350,44)
@@ -52,27 +54,49 @@ class Apk(CreatFrame):
 
         self.buttonConnect=CreatButton(self,"Connecter",350,35)
         self.buttonConnect.buttonPlace(0.5,0.72,"center")
-        self.buttonConnect.buttonConfig(font=(type_font,14,"bold"))
+        self.buttonConnect.buttonConfig(font=(type_font,14,"bold"),fg_color=self.theme_data["title"])
+        
+        if self.type.lower() == "stagaire":
+            self.ConnecteAccount = CreatButton(
+                self,
+                "Vous n'avez pas de compte ? Inscrivez-vous ici",
+                text_color="#B0B0B0",
+                hover_color="#2C3440",
+                fg_color="transparent",
+                corner_radius=7,
+                height=30,
+                command=self.change_to_Inscrire
+            )
+            self.ConnecteAccount.buttonPlace(0.5, 0.81, "center")
 
-        self.ConnecteAccount=CreatButton(self,"Vous n'avez pas de compte ? Inscrivez-vous ici",text_color="#B0B0B0",hover_color="#2C3440",fg_color="transparent",corner_radius=7,height=30,command=self.change_to_Inscrire)
-        self.ConnecteAccount.buttonPlace(0.5,0.81,"center")
+            self.ConnecteAccount.bind("<Enter>", self.on_entre)
+            self.ConnecteAccount.bind("<Leave>", self.on_leave)
 
-        self.ConnecteAccount.bind("<Enter>", self.on_entre)
-        self.ConnecteAccount.bind("<Leave>", self.on_leave)
 
-        self.ForgetPwConnect=CreatButton(self,"Forget Password ?",160,26,lambda : self.change_to_otp(),6,"transparent","#2C3440")
+        #self.ConnecteAccount=CreatButton(self,"Vous n'avez pas de compte ? Inscrivez-vous ici",text_color="#B0B0B0",hover_color="#2C3440",fg_color="transparent",corner_radius=7,height=30,command=self.change_to_Inscrire)
+        #self.ConnecteAccount.buttonPlace(0.5,0.81,"center")
+
+        #self.ConnecteAccount.bind("<Enter>", self.on_entre)
+        #self.ConnecteAccount.bind("<Leave>", self.on_leave)
+
+        self.ForgetPwConnect=CreatButton(self,"Mot de Passe oublier ?",160,26,lambda : self.change_to_otp(),6,"transparent",text_color="#B0B0B0",hover_color="#2C3440")
         self.ForgetPwConnect.buttonPlace(0.5,0.87,"center")
-        self.ForgetPwConnect.buttonConfig(bg_color="#343A40",font=(type_font,12,"bold"),text_color="#AAAAAA")
+        #self.ForgetPwConnect.buttonConfig(bg_color="transparent",font=(type_font,12,"bold"),text_color="#B0B0B0")
+        
+        self.ForgetPwConnect.bind("<Enter>", self.on_forget_enter)
+        self.ForgetPwConnect.bind("<Leave>", self.on_forget_leave)
+
+        
         self.footer=CreatLabel(
             self,
             text="© 2025 DDnote - Système de gestion des notes",
             font_size=11,
             text_font=subtitle_font[0],
-            text_color="#64748b",
+            text_color="white",
             bg_color="transparent"
         )
 
-        self.footer.LabelPlace(relx=0.5,rely=0.93,anchor="center")
+        self.footer.LabelPlace(relx=0.5,rely=0.96,anchor="center")
         self.show_Frame()
         self.buttonConnect.configure(command=lambda: self.CheckConnect(self.NameDateBase,self.type))
     def CheckConnect(self,NameDateBase,type,**kwarge):
@@ -122,11 +146,21 @@ class Apk(CreatFrame):
         self.destroy()
         manager = ChangeFrame(self.master)
         manager.show_frame(lambda parent: ForgetPassword(parent, "test.csv", self.type))
-    def on_entre(self,event):
-        self.ConnecteAccount.buttonConfig(text_color="#3b82f6")
-   
-    def on_leave(self,event):
-        self.ConnecteAccount.buttonConfig(text_color="#B0B0B0")
+        
+    def on_entre(self, event):
+        if hasattr(self, 'ConnecteAccount'):
+            self.ConnecteAccount.buttonConfig(text_color=self.theme_data["text"])
+
+    def on_leave(self, event):
+        if hasattr(self, 'ConnecteAccount'):
+            self.ConnecteAccount.buttonConfig(text_color="#B0B0B0")
+        
+    def on_forget_enter(self, event):
+        self.ForgetPwConnect.buttonConfig(text_color=self.theme_data["text"])
+
+    def on_forget_leave(self, event):
+        self.ForgetPwConnect.buttonConfig(text_color="#B0B0B0")
+        
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")
 

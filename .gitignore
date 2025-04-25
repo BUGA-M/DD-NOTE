@@ -12,5 +12,6 @@ htmlcov/
 .cache/
 
 #test files
-test/
+**/test/
+
 

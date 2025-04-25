@@ -31,7 +31,7 @@ class App(ctk.CTk):
         self.title("DDnote")
 
         ctk.set_appearance_mode(self.theme_config["theme"])
-        ctk.set_default_color_theme(self.theme_config["color_theme"])
+        #ctk.set_default_color_theme(self.theme_config["color_theme"])
 
         self.theme_controls = ThemeControls(self, self.theme_config, self.recreate_app)
 
@@ -50,9 +50,9 @@ class App(ctk.CTk):
         self.quit()
         subprocess.Popen([sys.executable] + sys.argv)
 
-    def clear_frame(self):
-        if hasattr(self, "current_frame") and self.current_frame is not None:
-            self.current_frame.destroy()
+    # def clear_frame(self):
+    #    if hasattr(self, "current_frame") and self.current_frame is not None:
+    #        self.current_frame.destroy()
 
 if __name__ == "__main__":
     app = App()

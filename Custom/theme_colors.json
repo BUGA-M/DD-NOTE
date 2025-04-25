@@ -1,12 +1,14 @@
 {
     "blue": {
-        "title": "#3b82f6",
+        "title": "#0ea5e9",
         "subtitle": "#94a3b8",
         "button": "#334155",
         "button_hover": "#0ea5e9",
         "border": "#64748b",
         "footer": "#64748b",
-        "control_bg": "#1e293b"
+        "control_bg": "#1e293b",
+        "ctrl_theme": "#0ea5e9",
+        "text": "#e0f7ff"
     },
     "green": {
         "title": "#10b981",
@@ -15,16 +17,20 @@
         "button_hover": "#34d399",
         "border": "#059669",
         "footer": "#065f46",
-        "control_bg": "#1c2d1c"
+        "control_bg": "#1c2d1c",
+        "ctrl_theme": "#10b981",
+        "text": "#dcfce7"
     },
     "dark-blue": {
-        "title": "#0ea5e9",
+        "title": "#3b82f6",
         "subtitle": "#64748b",
         "button": "#1e293b",
         "button_hover": "#3b82f6",
         "border": "#475569",
         "footer": "#475569",
-        "control_bg": "#1e293b"
+        "control_bg": "#1e293b",
+        "ctrl_theme": "#002777",
+        "text": "#dbeafe"
     },
     "violet": {
         "title": "#8b5cf6",
@@ -33,7 +39,9 @@
         "button_hover": "#7c3aed",
         "border": "#a78bfa",
         "footer": "#4c1d95",
-        "control_bg": "#2e1065"
+        "control_bg": "#2e1065",
+        "ctrl_theme": "#8b5cf6",
+        "text": "#ede9fe"
     },
     "red": {
         "title": "#ef4444",
@@ -42,7 +50,9 @@
         "button_hover": "#dc2626",
         "border": "#fecaca",
         "footer": "#991b1b",
-        "control_bg": "#450a0a"
+        "control_bg": "#450a0a",
+        "ctrl_theme": "#ef4444",
+        "text": "#fee2e2"
     },
     "orange": {
         "title": "#f97316",
@@ -51,6 +61,19 @@
         "button_hover": "#ea580c",
         "border": "#fed7aa",
         "footer": "#c2410c",
-        "control_bg": "#431407"
+        "control_bg": "#431407",
+        "ctrl_theme": "#f97316",
+        "text": "#fff7ed"
+    },
+    "rose": {
+        "title": "#ff69b4",
+        "subtitle": "#ffcce6",
+        "button": "#ff1493",
+        "button_hover": "#ff85c1",
+        "border": "#ff99cc",
+        "footer": "#ff0066",
+        "control_bg": "#99004d",
+        "ctrl_theme": "#ff69b4",
+        "text": "#ffe4f1"
     }
 }

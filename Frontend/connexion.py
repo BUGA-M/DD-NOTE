@@ -12,6 +12,8 @@ FontInstaller.set_install_path(font_dir)
 
 class ConnexionFrame(CreatFrame):
     def __init__(self, master,FrameSinscrire):
+        theme_name = ThemeManager.load_theme_preference()["color_theme"]
+        theme_data = ThemeColors.load_colors(theme_name)
         super().__init__(
             master,
             600,
@@ -54,7 +56,7 @@ class ConnexionFrame(CreatFrame):
         )
         self.labelSubtitle.LabelPlace(0.5, 0.22)
 
-        self.ligne = CreatFrame(self, 385, 2, fg_color="#475569")
+        self.ligne = CreatFrame(self, 385, 2, fg_color=theme_data["button"])
         self.ligne.FramePlace(rely=0.25)
         
         self.roles = ["Admin", "Stagaire", "Formateur"]
@@ -80,7 +82,7 @@ class ConnexionFrame(CreatFrame):
                 corner_radius=10 ,
                 image=CreateImage(str(pic)),
                 compound="top",
-                command=lambda : self.change_to_accueil(sinc)
+                command=lambda sinc=sinc: self.change_to_accueil(sinc)
             )
             self.buttons.append(btn)
         
