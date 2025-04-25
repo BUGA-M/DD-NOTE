@@ -11,7 +11,7 @@ venv/
 htmlcov/
 .cache/
 
-# Fichiers de test
+# Ignorer tous les dossiers test/ peu importe leur emplacement
 test/
 */test/
 **/test/
