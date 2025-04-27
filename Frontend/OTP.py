@@ -32,7 +32,7 @@ class OTP(CreatFrame):
         self.pathReturn=Path("./Custom/pic/return.png").resolve()
         self.picReturn=CreateImage(str(self.pathReturn),width=20,height=20)
 
-        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=lambda : self.returnforget(),fg_color=self.theme_data["title"])
+        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=lambda : self.returnAccueil(),fg_color=self.theme_data["title"])
         self.returnButton.buttonPlace(0.09,0.08,"center")
         self.returnButton.buttonConfig(font=(self.type_font,14,"bold"))
         
@@ -69,7 +69,6 @@ class OTP(CreatFrame):
                 justify="center",
                 placeholder_text="",
                 fg_color=self.theme_data["title"],
-                border_color="black",
                 text_color="white",
             )
             entry.EntryConfig(
@@ -116,6 +115,8 @@ class OTP(CreatFrame):
     def returnAccueil(self):
         from Frontend.connexion import ConnexionFrame
         from Frontend.Siscrire import Apk
+        self.time_left=300
+        self.timer_running=False
         self.destroy()
         manager=ChangeFrame(self.master)
         FrameSinscrire=[
@@ -125,11 +126,13 @@ class OTP(CreatFrame):
         ]
         manager.show_frame(lambda parent: ConnexionFrame(parent,FrameSinscrire))
         
-    def returnforget(self):
-        from Frontend.ForgetPassword import ForgetPassword
-        self.destroy()
-        manager=ChangeFrame(self.master)
-        manager.show_frame(lambda parent: ForgetPassword(parent, "test.csv", self.type))
+    # def returnforget(self):
+    #     from Frontend.ForgetPassword import ForgetPassword
+    #     self.time_left=300
+    #     self.timer_running=False
+    #     self.destroy()
+    #     manager=ChangeFrame(self.master)
+    #     manager.show_frame(lambda parent: ForgetPassword(parent, "test.csv", self.type))
     
     def sendEmail(self, Email_receiver):
         load_dotenv()

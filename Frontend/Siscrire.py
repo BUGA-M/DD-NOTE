@@ -73,11 +73,11 @@ class Apk(CreatFrame):
             self.ConnecteAccount.bind("<Leave>", self.on_leave)
 
 
-        #self.ConnecteAccount=CreatButton(self,"Vous n'avez pas de compte ? Inscrivez-vous ici",text_color="#B0B0B0",hover_color="#2C3440",fg_color="transparent",corner_radius=7,height=30,command=self.change_to_Inscrire)
-        #self.ConnecteAccount.buttonPlace(0.5,0.81,"center")
+        self.ConnecteAccount=CreatButton(self,"Vous n'avez pas de compte ? Inscrivez-vous ici",text_color="#B0B0B0",hover_color="#2C3440",fg_color="transparent",corner_radius=7,height=30,command=self.change_to_Inscrire)
+        self.ConnecteAccount.buttonPlace(0.5,0.81,"center")
 
-        #self.ConnecteAccount.bind("<Enter>", self.on_entre)
-        #self.ConnecteAccount.bind("<Leave>", self.on_leave)
+        self.ConnecteAccount.bind("<Enter>", self.on_entre)
+        self.ConnecteAccount.bind("<Leave>", self.on_leave)
 
         self.ForgetPwConnect=CreatButton(self,"Mot de Passe oublier ?",160,26,lambda : self.change_to_otp(),6,"transparent",text_color="#B0B0B0",hover_color="#2C3440")
         self.ForgetPwConnect.buttonPlace(0.5,0.87,"center")
