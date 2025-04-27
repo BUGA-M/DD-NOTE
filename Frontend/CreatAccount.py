@@ -27,7 +27,8 @@ class CreatAccount(CreatFrame):
         )
         self.title_font = FontInstaller.get_font("Titan One")
         self.subtitle_font = FontInstaller.get_font("Poppins")
-        self.type_font = FontInstaller.get_font("Orbitron")      
+        self.type_font = FontInstaller.get_font("Orbitron")
+                
         self.sexe = ["Homme", "Femme"]
         self.niv_scolaire  = ["6éme année primaire", "3ème année collége", "Niveau Bac", "Baccalauréat"]
         self.CreatInterface()

@@ -65,7 +65,7 @@ class OTP(CreatFrame):
                 40,
                 45,
                 8,
-                2,
+                1,
                 justify="center",
                 placeholder_text="",
                 fg_color=self.theme_data["title"],
@@ -115,8 +115,13 @@ class OTP(CreatFrame):
     def returnAccueil(self):
         from Frontend.connexion import ConnexionFrame
         from Frontend.Siscrire import Apk
+<<<<<<< HEAD
         self.time_left=300
         self.timer_running=False
+=======
+        self.time_left = 300
+        self.timer_running = False
+>>>>>>> 7651c0101570e894480d43038eaaeed48eead78a
         self.destroy()
         manager=ChangeFrame(self.master)
         FrameSinscrire=[
