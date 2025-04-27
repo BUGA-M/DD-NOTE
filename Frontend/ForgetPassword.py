@@ -146,8 +146,8 @@ class ForgetPassword(CreatFrame):
         import csv
 
         load_dotenv()
-        email_sendaire = os.getenv("EMAIL_SENDER")
-        email_password = os.getenv("EMAIL_PASSWORD")
+        email_sendaire = str(os.getenv("EMAIL_SENDER"))
+        email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email_receiver
 
         Subject = "Votre Code de Vérification - DD-NOTE-OFPPT"
