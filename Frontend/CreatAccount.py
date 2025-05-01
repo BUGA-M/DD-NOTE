@@ -1,17 +1,20 @@
 import customtkinter as ctk
 from tkinter import messagebox
 import csv, re, random
+import sqlite3
 import smtplib
 from email.message import EmailMessage
 import ssl
 from pathlib import Path
 from datetime import datetime
 from Frontend.ForgetPassword import ForgetPassword
-from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, FontInstaller, ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
+from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, FontInstaller, ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
 from Frontend.Siscrire import Apk
-from Frontend.connexion import ConnexionFrame
 from dotenv import load_dotenv
+import sqlite3
 import os
+import hashlib
+from datetime import datetime
 
 class CreatAccount(CreatFrame):
     def __init__(self, master):
@@ -28,7 +31,9 @@ class CreatAccount(CreatFrame):
         self.title_font = FontInstaller.get_font("Titan One")
         self.subtitle_font = FontInstaller.get_font("Poppins")
         self.type_font = FontInstaller.get_font("Orbitron")
-                
+
+        self.basedonne=BaseDonnees()
+
         self.sexe = ["Homme", "Femme"]
         self.niv_scolaire  = ["6éme année primaire", "3ème année collége", "Niveau Bac", "Baccalauréat"]
         self.CreatInterface()
@@ -71,19 +76,15 @@ class CreatAccount(CreatFrame):
         self.Niv_Scolaire.ComboBoxPlace(0.73,0.49,"center")
         self.Niv_Scolaire.set("Votre Niveau scolaire *")
 
-        
-
         self.Filiere=CreatComboBox(self,[],485,42,fg_color="white",bg_color="transparent",text_color="#9E9E9E",corner_radius=7, state="readonly",button_color=self.theme_data["button_hover"],border_width=0)
         self.Filiere.ComboBoxPlace(0.5,0.59,"center")
         self.Filiere.set("Votre Filiéres *")
 
         self.Niv_Scolaire.ComboBoxConfig(command=lambda value: self.check_niveau())
 
-
         self.email=CreatEntry(self,485,42,7,0,placeholder_text="Votre Email *",Font_size=12)
         self.email.EntryPlace(0.5,0.69,"center")
 
-    
         self.buttonConnect=CreatButton(self,"Valide",485,35,command=self.valide_formulaire,fg_color=self.theme_data["title"])
         self.buttonConnect.buttonPlace(0.5,0.80,"center")
         self.buttonConnect.buttonConfig(font=(self.type_font,14,"bold"))
@@ -106,27 +107,7 @@ class CreatAccount(CreatFrame):
 
     def check_niveau(self):
         selected_niveau = self.Niv_Scolaire.get()
-        
-        all_filaires = [
-            "Développement Digital",
-            "Réseaux Informatiques",
-            "Gestion des Entreprises",
-            "Gestion Hôtelière",
-            "Génie Civil",
-            "Électromécanique",
-            "Mécanique", 
-            "Électricité", 
-            "Gestion", 
-            "Tourisme",
-            "Pâtisserie",   
-            "BTP (Bâtiment et Travaux Publics)", 
-            "Métiers de la Coiffure et Esthétique", 
-            "Plomberie Sanitaire",
-            "Menuiserie Aluminium et Bois"
-        ]
-        
 
-        
         if selected_niveau == "6éme année primaire":
             self.filières_ofppt = [
                 "Gestion Hôtelière", "Génie Civil", "Électromécanique", "Mécanique",
@@ -152,7 +133,6 @@ class CreatAccount(CreatFrame):
         else:
             self.filières_ofppt=[]
         
-
         self.Filiere.ComboBoxConfig(values=self.filières_ofppt)
         self.Filiere.set("Votre Filiéres *")
 
@@ -211,9 +191,7 @@ class CreatAccount(CreatFrame):
         if not date_str:
             messagebox.showerror('error','La date de naissance est obligatoire.')
             return False
-
-        date_formats = ["%d/%m/%Y", "%d-%m-%Y"]
-        
+        date_formats=["%d/%m/%Y","%d-%m-%Y"]
         for i in date_formats:
             try:
                 date_obj = datetime.strptime(date_str, i)
@@ -295,41 +273,42 @@ class CreatAccount(CreatFrame):
     
     def valide_formulaire(self):
         try:
-            nom = self.nom.get().strip()
-            prenom = self.prenom.get().strip()
-            email = self.email.get().strip()
-            sexe = self.Sexe.get().strip()
-            dateNaissance = self.dateNaissance.get().strip()
+            nom=self.nom.get().strip()
+            prenom=self.prenom.get().strip()
+            email=self.email.get().strip()
+            sexe=self.Sexe.get().strip()
+            dateNaissance=self.dateNaissance.get().strip()
 
-            valide_nom = self.validate_nom_prenom(nom, "nom")
-            valide_prenom = self.validate_nom_prenom(prenom, "prénom")
-            valide_email = self.validate_email(email)
-            valide_date = self.validate_date_naissance(dateNaissance)
-            valide_sexe = self.validate_sexe(sexe)
-            valide_bac = self.validate_bac_year(self.Bac.get().strip())
-            valide_dropdown = self.validate_dropdowns()
+            valide_nom=self.validate_nom_prenom(nom, "nom")
+            valide_prenom=self.validate_nom_prenom(prenom, "prénom")
+            valide_email=self.validate_email(email)
+            valide_date=self.validate_date_naissance(dateNaissance)
+            valide_sexe=self.validate_sexe(sexe)
+            valide_bac=self.validate_bac_year(self.Bac.get().strip())
+            valide_dropdown =self.validate_dropdowns()
 
             all_valide = [valide_email, valide_nom, valide_prenom, valide_sexe, valide_date, valide_dropdown, valide_bac]
 
             if False not in all_valide:
-                
-                
-                with open('utilisateurs.csv', 'a', newline='', encoding="utf-8") as file:
-                    writer = csv.writer(file)
-                    writer.writerow(['Nom', 'Prénom', 'Sexe', 'Date de naissance', 'Niveau', 'Année de bac', 'Filiére', 'Email'])
-                    writer.writerow([
-                        nom, 
-                        prenom, 
-                        sexe, 
-                        dateNaissance, 
-                        self.Niv_Scolaire.get().strip(), 
-                        self.Bac.get().strip(),
-                        self.Filiere.get().strip(),
-                        email
-                    ])
+                if self.basedonne.validation_email_existe(email,0):
+                    messagebox.showwarning("Adresse e-mail non vérifiée","Cette adresse e-mail est déjà associée à un autre compte non vérifié. Veuillez vérifier ce compte pour poursuivre.")
+                    with open("FicherVerfEmail.csv","w",newline="",encoding="utf-8") as f:
+                        write=csv.writer(f,delimiter=";")
+                        write.writerow([email])
                     self.sendEmailCode(email)
-                messagebox.showinfo("Succès", "Inscription réussie!")
-                self.change_to_otp()
+                    self.change_to_otp()
+                
+                elif self.basedonne.validation_email_existe(email,1):
+                    messagebox.showwarning("Adresse e-mail déjà utilisée","Cette adresse e-mail est déjà utilisée par un autre compte. Veuillez saisir une autre adresse e-mail, s’il vous plaît.")
+                    return
+                else:
+                    if self.basedonne.inserer_utilisateur(nom,prenom,sexe,dateNaissance,email,self.Bac.get(),self.Niv_Scolaire.get(),self.Filiere.get()):
+                        with open("FicherVerfEmail.csv","w",newline="",encoding="utf-8") as f:
+                            write=csv.writer(f,delimiter=";")
+                            write.writerow([email])
+                        messagebox.showinfo("Succès", "Inscription enregistrée. Veuillez vérifier votre email.")
+                        self.sendEmailCode(email)
+                        self.change_to_otp()
         except Exception as e:
             messagebox.showerror("Erreur système", f"Une erreur inattendue s'est produite: {str(e)}")
     
@@ -352,9 +331,8 @@ class CreatAccount(CreatFrame):
         em['Subject'] = Subject
 
         context = ssl.create_default_context()
-        code = str(random.randint(100000, 999999))
+        code = str(random.randint(100000,999999))
 
-         # Corps de l’email version HTML avec style pro
         html_content = f"""\
             <!DOCTYPE html>
             <html lang="fr">
@@ -593,11 +571,7 @@ class CreatAccount(CreatFrame):
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
 
-            # Sauvegarder le code dans un fichier CSV
-            with open("FicherVerfEmail.csv", "w", newline='', encoding='utf-8') as ficher:
-                writer = csv.writer(ficher, delimiter=";")
-                writer.writerow([Email_receiver, code])
-
-            messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            if self.basedonne.enregistrer_code_verification(Email_receiver,code):
+                messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}")

@@ -1,12 +1,15 @@
 import customtkinter as ctk
 from Frontend import ConnexionFrame,Apk
-from Custom import FontInstaller,CreatFrame,CreatLabel,CreatButton,ThemeControls,ThemeManager,ThemeColors,ChangeFrame
+from Custom import FontInstaller,CreatFrame,CreatLabel,CreatButton,ThemeControls,ThemeManager,ThemeColors,ChangeFrame,DataBase
 from PIL import Image
 import json
 import os
 import sys
 import subprocess
 from tkinter import messagebox
+import sqlite3
+import hashlib
+from datetime import datetime
 
 class App(ctk.CTk):
     def __init__(self):
@@ -22,8 +25,7 @@ class App(ctk.CTk):
         ]
         self.manager=ChangeFrame(self)
         self.manager.show_frame(lambda parent:ConnexionFrame(parent,self.FrameSinscrire))
-        # self.load_frames()
-
+        self.data=DataBase.BaseDonnees()
 
     def setup_window(self):
         self.geometry("1280x720")
@@ -31,8 +33,6 @@ class App(ctk.CTk):
         self.title("DDnote")
 
         ctk.set_appearance_mode(self.theme_config["theme"])
-        #ctk.set_default_color_theme(self.theme_config["color_theme"])
-
         self.theme_controls = ThemeControls(self, self.theme_config, self.recreate_app)
 
     def install_fonts(self):
@@ -50,10 +50,8 @@ class App(ctk.CTk):
         self.quit()
         subprocess.Popen([sys.executable] + sys.argv)
 
-    # def clear_frame(self):
-    #    if hasattr(self, "current_frame") and self.current_frame is not None:
-    #        self.current_frame.destroy()
 
 if __name__ == "__main__":
     app = App()
+    
     app.mainloop()

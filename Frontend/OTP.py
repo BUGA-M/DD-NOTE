@@ -4,7 +4,7 @@ import ssl
 import random
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
 import csv
 import time
 import threading
@@ -26,6 +26,7 @@ class OTP(CreatFrame):
         self.type_font = FontInstaller.get_font("Orbitron")
         self.time_left = 300
         self.timer_running = False
+        self.basedonnee=BaseDonnees()
         self.CreatInterfaceOTP()
     def CreatInterfaceOTP(self):
         #,self.title_font[0],"#3b82f6"
@@ -388,12 +389,11 @@ class OTP(CreatFrame):
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
 
-            # Sauvegarder le code dans un fichier CSV
-            with open("FicherVerf.csv", "w", newline='', encoding='utf-8') as ficher:
-                writer = csv.writer(ficher, delimiter=";")
-                writer.writerow([Email_receiver, code])
-
-            messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            if self.basedonnee.modifier_code_verification(Email_receiver,code) :
+                with open("ForgetPss.csv", "w", newline='', encoding='utf-8') as ficher:
+                    writer = csv.writer(ficher, delimiter=";")
+                    writer.writerow([Email_receiver])
+                messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}") 
                
@@ -449,7 +449,7 @@ class OTP(CreatFrame):
         for entry in self.otp_entries:
             entry.delete(0, "end")
         self.otp_entries[0].focus_set()
-        with open("FicherVerf.csv","r",newline='',encoding='utf-8') as ficher:
+        with open("ForgetPss.csv","r",newline='',encoding='utf-8') as ficher:
             count=csv.reader(ficher,delimiter=';')
             for i in count:
                 Email=i[0]
@@ -474,10 +474,11 @@ class OTP(CreatFrame):
             self.Verification_OTP()
     
     def Verification_OTP(self):
-        with open("FicherVerf.csv","r",newline='',encoding='utf-8') as ficher:
+        with open("ForgetPss.csv","r",newline='',encoding='utf-8') as ficher:
             count=csv.reader(ficher,delimiter=';')
             for i in count:
-                Code=i[1]
+                Email=i[0]
+        Code=self.basedonnee.obtenir_code_verification(Email)
         otp_code=''.join([entry.get() for entry in self.otp_entries])
         if len(otp_code)!=6:
             messagebox.showerror("error","Veuillez saisir 6 chiffres")
@@ -494,6 +495,7 @@ class OTP(CreatFrame):
         if otp_code==Code:
             self.timer_running=False
             messagebox.showinfo("Succès","Code OTP vérifié avec succès!")
+            self.basedonnee.supprimer_code_verification(Email)
             self.change_to_chnagePass()
         else:
             messagebox.showerror("error","Code OTP incorrect.")
@@ -504,6 +506,6 @@ class OTP(CreatFrame):
     def change_to_chnagePass(self):
         self.destroy()
         manager=ChangeFrame(self.master)
-        manager.show_frame(lambda parent: CreatChangePassword(parent, "test.csv", "proof","imad"))
+        manager.show_frame(lambda parent: CreatChangePassword(parent, "test.csv", "proof"))
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")

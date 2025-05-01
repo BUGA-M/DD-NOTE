@@ -4,13 +4,16 @@ import ssl
 import random
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
 from Frontend.OTP import OTP
 from Frontend.connexion import ConnexionFrame
 import csv
 from pathlib import Path
 from dotenv import load_dotenv
+import sqlite3
 import os
+import hashlib
+from datetime import datetime
 
 
 class ForgetPassword(CreatFrame):
@@ -26,6 +29,7 @@ class ForgetPassword(CreatFrame):
         self.time_left=300
         self.timer_running=False
         self.creatforget()
+        self.basedonne=BaseDonnees()
    
     def creatforget(self):
         self.pathReturn=Path("./Custom/pic/return.png").resolve()
@@ -126,13 +130,13 @@ class ForgetPassword(CreatFrame):
             messagebox.showerror("Erreur", "Veuillez entrer une adresse email valide")
             return
         found=False
-        with open(self.datebase,"r",newline='',encoding="utf-8") as ficher:
-            count=csv.reader(ficher,delimiter=";")
-            for i in count:
-                if i[0]==Email:
-                    found=True
-                    self.sendEmail(Email)
-                    break
+        if self.basedonne.email_existe(Email):
+            found=True
+            with open("ForgetPss.csv","w",newline="",encoding="utf-8") as f:
+                write=csv.writer(f,delimiter=";")
+                write.writerow([Email])
+            self.sendEmail(Email)
+            
         if not found:
             messagebox.showerror("Erreur","Adresse e-mail non trouvée dans la base de données.")
             return
@@ -150,7 +154,7 @@ class ForgetPassword(CreatFrame):
         email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email_receiver
 
-        Subject = "Votre Code de Vérification - DD-NOTE-OFPPT"
+        Subject="Votre Code de Vérification - DD-NOTE-OFPPT"
         em = EmailMessage()
         em['From'] = email_sendaire
         em['To'] = email_receiver
@@ -373,25 +377,16 @@ class ForgetPassword(CreatFrame):
             </html>
         """
 
-
-        # Contenu brut (obligatoire pour fallback)
         em.set_content("Votre code de vérification est : " + code)
         em.add_alternative(html_content, subtype="html")
-
         try:
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
                 smtp.login(email_sendaire, email_password)
                 smtp.send_message(em)
 
-            # Écriture du code dans un fichier CSV temporaire
-            with open("FicherVerf.csv", "w", newline='', encoding='utf-8') as ficher:
-                writer = csv.writer(ficher, delimiter=";")
-                writer.writerow([Email_receiver, code])
-
-            from tkinter import messagebox
-            messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            if self.basedonne.enregistrer_code_verification(Email_receiver,code):
+                messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
-            from tkinter import messagebox
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {e}")
 
                 

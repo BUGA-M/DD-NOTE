@@ -4,13 +4,16 @@ import ssl
 import random,string,os
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,ThemeControls,ThemeManager,ThemeColors
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
 import csv
 import time
 import threading
 import re
 from Frontend.Change_Password import CreatChangePassword
 from dotenv import load_dotenv
+import sqlite3
+import hashlib
+from datetime import datetime
 
 class OTP_Email(CreatFrame):
     def __init__(self, master, NameDateBase, type):
@@ -25,6 +28,7 @@ class OTP_Email(CreatFrame):
         self.time_left = 300
         self.timer_running = False
         self.CreatInterfaceOTP()
+        self.basedonnee=BaseDonnees()
     def CreatInterfaceOTP(self):
         self.title_label=CreatLabel(self,"Vérifier le code",28,"transparent")
         self.title_label.LabelPlace(0.5,0.17,"center")
@@ -117,7 +121,7 @@ class OTP_Email(CreatFrame):
         ]
         manager.show_frame(lambda parent: ConnexionFrame(parent,FrameSinscrire))
     
-    def sendEmail(self, Email_receiver):
+    def sendEmail(self,Email_receiver):
         load_dotenv()
         email_sender = str(os.getenv("EMAIL_SENDER"))
         email_password = str(os.getenv("EMAIL_PASSWORD"))
@@ -370,13 +374,8 @@ class OTP_Email(CreatFrame):
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
-
-            # Sauvegarder le code dans un fichier CSV
-            with open("FicherVerf.csv", "w", newline='', encoding='utf-8') as ficher:
-                writer = csv.writer(ficher, delimiter=";")
-                writer.writerow([Email_receiver, code])
-
-            messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            if self.basedonnee.modifier_code_verification(Email_receiver,code):
+                messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}") 
     
@@ -635,12 +634,8 @@ class OTP_Email(CreatFrame):
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
 
-            # Sauvegarder le code dans un fichier CSV
-            with open("FicherVerf.csv", "w", newline='', encoding='utf-8') as ficher:
-                writer = csv.writer(ficher, delimiter=";")
-                writer.writerow([email_receiver, password])
-
-            messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            if self.basedonnee.mettre_a_jour_mot_de_passe(email_receiver,password):
+                messagebox.showinfo("Succès", "Le mot de passe de votre compte a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}")
     
@@ -705,7 +700,8 @@ class OTP_Email(CreatFrame):
             self.label_expire.LabelConfig(state="disabled")
         except:
             pass
-            
+
+    
     def move_to_next(self,event,index):
         if not self.timer_running or self.time_left <= 0:
             return
@@ -724,8 +720,8 @@ class OTP_Email(CreatFrame):
         with open("FicherVerfEmail.csv","r",newline='',encoding='utf-8') as ficher:
             count=csv.reader(ficher,delimiter=';')
             for i in count:
-                Code=i[1]
                 Email=i[0]
+        Code=self.basedonnee.obtenir_code_verification(Email)
         otp_code=''.join([entry.get() for entry in self.otp_entries])
         if len(otp_code)!=6:
             messagebox.showerror("error","Veuillez saisir 6 chiffres")
@@ -743,6 +739,7 @@ class OTP_Email(CreatFrame):
             self.timer_running=False
             messagebox.showinfo("Succès","Code OTP vérifié avec succès!")
             self.sendPassword(Email)
+            self.basedonnee.supprimer_code_verification(Email)
             self.change_to_accueil()
         else:
             messagebox.showerror("error","Code OTP incorrect.")
