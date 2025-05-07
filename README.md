@@ -175,7 +175,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 - **bandit** - Analyse de sécurité du code
 - **black** - Formatage automatique du code
 
---
+--- 
 
 ## 🧑‍💻 Github des développeurs
 
