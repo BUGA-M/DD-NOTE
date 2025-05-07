@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎓 DD-NOTE-OFPPT
+# 🎓 DD-NOTE
 
 ### Système de Gestion des Notes avec Authentification OTP
   
@@ -10,7 +10,7 @@
 [![Made with Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![CustomTkinter](https://img.shields.io/badge/UI-CustomTkinter-blue?style=for-the-badge)](https://github.com/TomSchimansky/CustomTkinter)
 
-<img src="./assets/banner.png" alt="Banner DD-NOTE-OFPPT" width="850px">
+<img src="./assets/banner.png" alt="Banner DD-NOTE" width="850px">
 
 </div>
 
@@ -21,7 +21,7 @@
 <div align="center">
 <table>
 <tr>
-<td width="60%">
+<td align="left" width="60%">
 
 ### ✨ Caractéristiques principales
 
@@ -171,12 +171,6 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 
 ## 🧪 Outils de développement
 
-- **customtkinter** – Interface graphique moderne et responsive
-- **pillow** – Gestion des images (PNG, JPEG, etc.)
-- **tk** – Interface Tkinter de base (intégrée à Python)
-- **python-dotenv** – Chargement sécurisé des variables d’environnement .env
-- **cryptography** – Chiffrement Fernet des données sensibles
-- **pysqlcipher3** – Base de données SQLite chiffrée avec SQLCipher
 - **flake8** - Linting et vérification du code
 - **bandit** - Analyse de sécurité du code
 - **black** - Formatage automatique du code
