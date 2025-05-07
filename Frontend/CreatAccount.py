@@ -15,6 +15,7 @@ import sqlite3
 import os
 import hashlib
 from datetime import datetime
+from Backend.models import EtudiantManager,CodeVerificationManager
 
 class CreatAccount(CreatFrame):
     def __init__(self, master):
@@ -32,7 +33,9 @@ class CreatAccount(CreatFrame):
         self.subtitle_font = FontInstaller.get_font("Poppins")
         self.type_font = FontInstaller.get_font("Orbitron")
 
-        self.basedonne=BaseDonnees()
+        #self.basedonne=BaseDonnees()
+        self.EtudiantManager=EtudiantManager()
+        self.codeOTP=CodeVerificationManager()
 
         self.sexe = ["Homme", "Femme"]
         self.niv_scolaire  = ["6éme année primaire", "3ème année collége", "Niveau Bac", "Baccalauréat"]
@@ -43,16 +46,16 @@ class CreatAccount(CreatFrame):
         self.picReturn = CreateImage(str(self.pathReturn), width=20, height=20)
 
         self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_accueil,fg_color=self.theme_data["title"])
-        self.returnButton.buttonPlace(0.1, 0.1, "center")
+        self.returnButton.buttonPlace(0.07,0.07, "center")
         self.returnButton.buttonConfig(font=(self.type_font, 14, "bold"))
 
         self.LabelSinscrire = CreatLabel(self, "S'inscrire", 30, self.title_font, "white", "transparent")
         self.LabelSinscrire.LabelPlace(0.5, 0.09, "center")
         self.LabelSinscrire.LabelConfig(font=(self.title_font[0], 29, "bold"))
-        self.ligne = CreatFrame(self, 385, 2, fg_color="#dfdddb")
-        self.ligne.FramePlace(rely=0.14)
+        self.ligne = CreatFrame(self, 485, 2, fg_color="#dfdddb")
+        self.ligne.FramePlace(rely=0.16)
 
-        self.subtitle = CreatLabel(self, "Bienvenue! Remplissez les champs selon présents dans votre identifiant",13,self.subtitle_font,"#B0B0B0")
+        self.subtitle = CreatLabel(self, "Bienvenue! Remplissez les champs",13,self.subtitle_font,"#B0B0B0")
         self.subtitle.LabelPlace(0.5, 0.19, "center")
         self.subtitle.LabelConfig(font=(self.subtitle, 13, "bold"))
 
@@ -273,50 +276,41 @@ class CreatAccount(CreatFrame):
     
     def valide_formulaire(self):
         try:
-            nom=self.nom.get().strip()
-            prenom=self.prenom.get().strip()
-            email=self.email.get().strip()
-            sexe=self.Sexe.get().strip()
-            dateNaissance=self.dateNaissance.get().strip()
+            nom = self.nom.get().strip()
+            prenom = self.prenom.get().strip()
+            email = self.email.get().strip()
+            sexe = self.Sexe.get().strip()
+            dateNaissance = self.dateNaissance.get().strip()
 
-            valide_nom=self.validate_nom_prenom(nom, "nom")
-            valide_prenom=self.validate_nom_prenom(prenom, "prénom")
-            valide_email=self.validate_email(email)
-            valide_date=self.validate_date_naissance(dateNaissance)
-            valide_sexe=self.validate_sexe(sexe)
-            valide_bac=self.validate_bac_year(self.Bac.get().strip())
-            valide_dropdown =self.validate_dropdowns()
+            valide_nom = self.validate_nom_prenom(nom, "nom")
+            valide_prenom = self.validate_nom_prenom(prenom, "prénom")
+            valide_email = self.validate_email(email)
+            valide_date = self.validate_date_naissance(dateNaissance)
+            valide_sexe = self.validate_sexe(sexe)
+            valide_bac = self.validate_bac_year(self.Bac.get().strip())
+            valide_dropdown = self.validate_dropdowns()
 
             all_valide = [valide_email, valide_nom, valide_prenom, valide_sexe, valide_date, valide_dropdown, valide_bac]
 
-            if False not in all_valide:
-                if self.basedonne.validation_email_existe(email,0):
-                    messagebox.showwarning("Adresse e-mail non vérifiée","Cette adresse e-mail est déjà associée à un autre compte non vérifié. Veuillez vérifier ce compte pour poursuivre.")
-                    with open("FicherVerfEmail.csv","w",newline="",encoding="utf-8") as f:
-                        write=csv.writer(f,delimiter=";")
-                        write.writerow([email])
-                    self.sendEmailCode(email)
-                    self.change_to_otp()
-                
-                elif self.basedonne.validation_email_existe(email,1):
-                    messagebox.showwarning("Adresse e-mail déjà utilisée","Cette adresse e-mail est déjà utilisée par un autre compte. Veuillez saisir une autre adresse e-mail, s’il vous plaît.")
+            if all(all_valide):
+                if self.EtudiantManager.email_existe(email):
+                    messagebox.showwarning("Adresse e-mail déjà utilisée",
+                        "Cette adresse e-mail est déjà utilisée par un autre compte. Veuillez saisir une autre adresse e-mail, s’il vous plaît.")
                     return
                 else:
-                    if self.basedonne.inserer_utilisateur(nom,prenom,sexe,dateNaissance,email,self.Bac.get(),self.Niv_Scolaire.get(),self.Filiere.get()):
-                        with open("FicherVerfEmail.csv","w",newline="",encoding="utf-8") as f:
-                            write=csv.writer(f,delimiter=";")
-                            write.writerow([email])
-                        messagebox.showinfo("Succès", "Inscription enregistrée. Veuillez vérifier votre email.")
-                        self.sendEmailCode(email)
-                        self.change_to_otp()
+                    messagebox.showinfo("Succès", "Inscription enregistrée. Veuillez vérifier votre email.")
+                    self.sendEmailCode(email)
+                    self.change_to_otp(email)
         except Exception as e:
+            print(f"Erreur: {e}")  # pour debug si besoin
             messagebox.showerror("Erreur système", f"Une erreur inattendue s'est produite: {str(e)}")
+
     
-    def change_to_otp(self):
+    def change_to_otp(self,email):
         from Frontend.OTP_Email import OTP_Email
         self.destroy()
         manager = ChangeFrame(self.master)
-        manager.show_frame(lambda parent: OTP_Email(parent, "test.csv", "proof"))
+        manager.show_frame(lambda parent: OTP_Email(parent, "test.csv", "proof",email))
 
     def sendEmailCode(self, Email_receiver):
         load_dotenv()
@@ -571,7 +565,7 @@ class CreatAccount(CreatFrame):
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
 
-            if self.basedonne.enregistrer_code_verification(Email_receiver,code):
+            if self.codeOTP.enregistrer_code(Email_receiver,code):
                 messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}")

@@ -5,15 +5,30 @@ __pycache__/
 # Environnement virtuel
 venv/
 .env/
+.env
 
 # Résultats de test, logs
 *.log
 htmlcov/
 .cache/
 
-# Ignorer tous les dossiers test/ peu importe leur emplacement
-test/
-*/test/
-**/test/
+# Dossiers de tests (peu importe leur profondeur)
+**/test*/
 
-.env
+# Clés ou scripts sensibles
+fernet_key.py
+config.py  
+test-fernet.py
+
+# Base de données locale / chiffrée (SQLCipher)
+*.sqlite3
+*.db
+Backend/data/
+
+# Éditeurs et systèmes
+*.swp
+*~
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

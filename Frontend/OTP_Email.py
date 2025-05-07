@@ -14,9 +14,11 @@ from dotenv import load_dotenv
 import sqlite3
 import hashlib
 from datetime import datetime
+from Backend.models import CodeVerificationManager
+from Backend.services import PasswordGenerateur
 
 class OTP_Email(CreatFrame):
-    def __init__(self, master, NameDateBase, type):
+    def __init__(self, master, NameDateBase, type,email):
         self.theme_name = ThemeManager.load_theme_preference()["color_theme"]
         self.theme_data = ThemeColors.load_colors(self.theme_name)
         super().__init__(master, 450, 450, "transparent", self.theme_data["button"], 20)
@@ -28,7 +30,11 @@ class OTP_Email(CreatFrame):
         self.time_left = 300
         self.timer_running = False
         self.CreatInterfaceOTP()
-        self.basedonnee=BaseDonnees()
+        #self.basedonnee=BaseDonnees()
+        self.EmailClient = email
+        
+        self.codeOTP=CodeVerificationManager()
+        
     def CreatInterfaceOTP(self):
         self.title_label=CreatLabel(self,"Vérifier le code",28,"transparent")
         self.title_label.LabelPlace(0.5,0.17,"center")
@@ -374,7 +380,7 @@ class OTP_Email(CreatFrame):
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
-            if self.basedonnee.modifier_code_verification(Email_receiver,code):
+            if self.basedonnee.modifier_code_verification(email_receiver,code):
                 messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}") 
@@ -392,8 +398,9 @@ class OTP_Email(CreatFrame):
         em['Subject'] = Subject
 
         context = ssl.create_default_context()
-        caracteres=string.ascii_letters+string.digits+string.punctuation
-        password= ''.join(random.choices(caracteres,k=10))
+        
+        generator = PasswordGenerateur(length=12)
+        password = generator.generate()
 
 
         html_content = f"""\
@@ -633,120 +640,126 @@ class OTP_Email(CreatFrame):
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
-
-            if self.basedonnee.mettre_a_jour_mot_de_passe(email_receiver,password):
-                messagebox.showinfo("Succès", "Le mot de passe de votre compte a été envoyé à votre adresse e-mail avec succès.")
+            #----------- enregistrement de password generer
+            #if self.codeOTP.enregistrer_code(email_receiver,password):
+            messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}")
     
     def start_timer(self):
         if not self.timer_running:
-            self.timer_running=True
-            self.timer_thread=threading.Thread(target=self.update_timer)
-            self.timer_thread.daemon=True
+            self.timer_running = True
+            self.timer_thread = threading.Thread(target=self.update_timer)
+            self.timer_thread.daemon = True
             self.timer_thread.start()
-    
+
     def update_timer(self):
         while self.timer_running and self.time_left > 0:
-            minutes,seconds=divmod(self.time_left, 60)
+            minutes, seconds = divmod(self.time_left, 60)
             time_str = f"{minutes:02d}:{seconds:02d}"
+            self.after(0, lambda t=time_str: self.update_timer_label(t))
 
-            self.after(0,lambda t=time_str:self.timer_label.configure(text=f"Temps restant: {t}"))
-
-            if self.time_left <= 120: 
-                self.after(0,lambda:self.timer_label.configure(text_color="#3b82f6"))
+            if self.time_left <= 120:
+                self.after(0, lambda: self.timer_label.configure(text_color="#3b82f6"))
+                time.sleep(0.5)
+                self.after(0, lambda: self.timer_label.configure(text_color="#e53e3e"))
+                time.sleep(0.5)
+            else:
                 time.sleep(1)
-                self.after(0,lambda:self.timer_label.configure(text_color="#e53e3e")) 
-            time.sleep(1)
-            self.time_left-=1
-        if self.time_left==0:
-            self.timer_running=False
-            self.timer_label.configure(text="Temps expiré!")
-            self.disable_verification()
-   
+
+            self.time_left -= 1
+
+        if self.time_left == 0:
+            self.timer_running = False
+            self.after(0, lambda: self.timer_label.configure(text="Temps expiré!", text_color="#e53e3e"))
+            self.after(0, self.disable_verification)
+            self.change_to_accueil()
+            return
+            
+
     def disable_verification(self):
         for entry in self.otp_entries:
-            entry.configure(state="disabled",border_width=0)
-        self.label_expire=CreatLabel(
+            entry.configure(state="disabled", border_width=0)
+        self.label_expire = CreatLabel(
             self,
             "Le délai de validation est expiré. Veuillez demander un nouveau code.",
             12,
-            self.subtitle_font)
-        self.label_expire.LabelPlace(0.5,0.52,"center")
-    
-    
+            self.subtitle_font
+        )
+        self.label_expire.LabelPlace(0.5, 0.52, "center")
+
     def active_verfication(self):
         for entry in self.otp_entries:
-            entry.configure(state="normal",border_width=2)
-    
+            entry.configure(state="normal", border_width=2)
+
     def rensend_code(self):
-        self.time_left=300
-        self.timer_running=False
+        self.time_left = 300
+        self.timer_running = False
         self.start_timer()
-        try:
-            self.label_expire.LabelConfig(state="disabled")
-        except:
-            pass
+
+        if hasattr(self, "label_expire"):
+            try:
+                self.label_expire.LabelConfig(state="disabled")
+            except Exception:
+                pass
+
         self.active_verfication()
         for entry in self.otp_entries:
             entry.delete(0, "end")
         self.otp_entries[0].focus_set()
-        with open("FicherVerfEmail.csv","r",newline='',encoding='utf-8') as ficher:
-            count=csv.reader(ficher,delimiter=';')
-            for i in count:
-                Email=i[0]
-        self.sendEmail(Email)
-        try:
-            self.label_expire.LabelConfig(state="disabled")
-        except:
-            pass
 
-    
-    def move_to_next(self,event,index):
+        self.sendEmail(self.EmailClient)
+
+    def move_to_next(self, event, index):
         if not self.timer_running or self.time_left <= 0:
             return
-            
-        entry=self.otp_entries[index]
-        value=entry.get()
-        if value and not re.match(r"^\d$",value):
-            entry.delete(0,"end")
+
+        entry = self.otp_entries[index]
+        value = entry.get()
+
+        if value and not re.match(r"^\d$", value):
+            entry.delete(0, "end")
             return
-        if value and index< 5:
-            self.otp_entries[index+1].focus_set()
+
+        if value and index < 5:
+            self.otp_entries[index + 1].focus_set()
         elif value and index == 5:
             self.Verification_OTP()
-    
+
     def Verification_OTP(self):
-        with open("FicherVerfEmail.csv","r",newline='',encoding='utf-8') as ficher:
-            count=csv.reader(ficher,delimiter=';')
-            for i in count:
-                Email=i[0]
-        Code=self.basedonnee.obtenir_code_verification(Email)
-        otp_code=''.join([entry.get() for entry in self.otp_entries])
-        if len(otp_code)!=6:
-            messagebox.showerror("error","Veuillez saisir 6 chiffres")
-            for entry in self.otp_entries:
-                entry.delete(0,"end")
-            self.otp_entries[0].focus_set()
-            return
-        if not otp_code.isdigit():
-            messagebox.showerror("error","Le code doit contenir uniquement des chiffres")
-            for entry in self.otp_entries:
-                entry.delete(0,"end")
-            self.otp_entries[0].focus_set()
-            return
-        if otp_code==Code:
-            self.timer_running=False
-            messagebox.showinfo("Succès","Code OTP vérifié avec succès!")
-            self.sendPassword(Email)
-            self.basedonnee.supprimer_code_verification(Email)
+        Code = self.codeOTP.get_code(self.EmailClient)
+        otp_code = ''.join([entry.get() for entry in self.otp_entries])
+
+        if self.codeOTP.incrementer_tentative(self.EmailClient) == 'destroy':
             self.change_to_accueil()
-        else:
-            messagebox.showerror("error","Code OTP incorrect.")
-            for entry in self.otp_entries:
-                entry.delete(0, "end")
-            self.otp_entries[0].focus_set()
             return
+
+        if len(otp_code) != 6:
+            messagebox.showerror("Erreur", "Veuillez saisir 6 chiffres.")
+        elif not otp_code.isdigit():
+            messagebox.showerror("Erreur", "Le code doit contenir uniquement des chiffres.")
+        elif otp_code == Code:
+            self.timer_running = False
+            messagebox.showinfo("Succès", "Code OTP vérifié avec succès !")
+            self.sendPassword(self.EmailClient)
+            self.codeOTP.valider_code(self.EmailClient, Code)
+            self.change_to_accueil()
+            return
+        else:
+            messagebox.showerror("Erreur", "Code OTP incorrect.")
+
+        # Réinitialisation du formulaire dans tous les cas d'erreur
+        for entry in self.otp_entries:
+            entry.delete(0, "end")
+        self.otp_entries[0].focus_set()
+        
+    def update_timer_label(self, time_str):
+        try:
+            if self.timer_label.winfo_exists():
+                self.timer_label.configure(text=f"Temps restant: {time_str}")
+        except Exception as e:
+            print(f"[ERREUR Timer] {e}")
+
     
     def change_to_accueil(self):
         from Frontend.connexion import ConnexionFrame

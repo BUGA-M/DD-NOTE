@@ -5,3 +5,5 @@ customtkinter
 pillow
 tk
 dotenv
+cryptography
+pysqlcipher3

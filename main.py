@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from Frontend import ConnexionFrame,Apk
 from Custom import FontInstaller,CreatFrame,CreatLabel,CreatButton,ThemeControls,ThemeManager,ThemeColors,ChangeFrame,DataBase
+from Backend.db.init import DatabaseInitializer
 from PIL import Image
 import json
 import os
@@ -25,8 +26,10 @@ class App(ctk.CTk):
         ]
         self.manager=ChangeFrame(self)
         self.manager.show_frame(lambda parent:ConnexionFrame(parent,self.FrameSinscrire))
-        self.data=DataBase.BaseDonnees()
-
+        #self.data=DataBase.BaseDonnees()
+        self.data=DatabaseInitializer()
+        self.data.initialize()
+        
     def setup_window(self):
         self.geometry("1280x720")
         self.minsize(500, 750)
@@ -53,5 +56,4 @@ class App(ctk.CTk):
 
 if __name__ == "__main__":
     app = App()
-    
     app.mainloop()
