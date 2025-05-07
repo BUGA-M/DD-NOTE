@@ -208,7 +208,6 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <br />
                 <a href="https://github.com/Abdellah"><img src="https://img.shields.io/badge/GitHub-BUGA--M-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
         </tr>
