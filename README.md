@@ -224,12 +224,9 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 
 ### Nous sommes à votre écoute pour toute question ou suggestion !
 
-<a href="mailto:contact@dd-note.com">
-<img src="https://img.shields.io/badge/Email-contact%40dd--note.com-D14836?style=for-the-badge&logo=gmail&logoColor=white">
-</a>
-<a href="https://discord.gg/jXFXCw6aKd">
-<img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=for-the-badge&logo=discord&logoColor=white">
-</a><br />
+<a href="mailto:contact@dd-note.com"><img src="https://img.shields.io/badge/Email-contact%40dd--note.com-D14836?style=for-the-badge&logo=gmail&logoColor=white"></a>
+<a href="https://discord.gg/9Tdk89qyw5"><img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=for-the-badge&logo=discord&logoColor=white"></a>
+<a href="https://www.linkedin.com/company/dd-note"><img src="https://img.shields.io/badge/LinkedIn-Suivre-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a>
 
 <a href="https://github.com/BUGA-M/DD-NOTE"><img src="https://img.shields.io/badge/⭐%20Star%20le%20projet%20sur%20GitHub-DD--NOTE-4B8BBE?style=for-the-badge&logo=github&logoColor=white" height="40px"></a>
 
@@ -239,4 +236,3 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
 ![CustomTkinter](https://img.shields.io/badge/UI-CustomTkinter-4B8BBE?style=flat)
 </div>
-
