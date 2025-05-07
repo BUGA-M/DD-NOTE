@@ -188,7 +188,7 @@ class OTP_Email(CreatFrame):
                                             </tr>
                                             <tr>
                                                 <td align="center">
-                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Réinitialisation de mot de passe</h1>
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Vérification de l'adresse e-mail via un code OTP</h1>
                                                 </td>
                                             </tr>
                                         </table>
@@ -202,7 +202,9 @@ class OTP_Email(CreatFrame):
                                             <tr>
                                                 <td>
                                                     <p style="font-size: 18px; font-weight: 500; margin: 0 0 20px 0;">Bonjour,</p>
-                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte DD-NOTE-OFPPT. Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous.</p>
+                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">
+                                                        Nous avons reçu une demande de création de compte pour votre adresse e-mail sur DD-NOTE.Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous
+                                                    </p>
                                                 </td>
                                             </tr>
                                             
@@ -254,7 +256,7 @@ class OTP_Email(CreatFrame):
                                                             <td style="padding: 25px;">
                                                                 <h3 style="margin-top: 0; color: {self.theme_data['title']}; font-size: 18px; font-weight: 600; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid {self.theme_data['title']}; display: inline-block;">Support technique</h3>
                                                                 <p style="font-size: 15px; line-height: 24px; margin: 0;">
-                                                                    📧 support@ddnote-ofppt.ma<br>
+                                                                    📧 ddnote.ma@gmail.com<br>
                                                                     📞 +212 6 66 66 66 66<br>
                                                                     🏢 OFPPT - Dévelopement Digital
                                                                 </p>
@@ -342,7 +344,7 @@ class OTP_Email(CreatFrame):
                                             <!-- Copyright -->
                                             <tr>
                                                 <td align="center">
-                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE-OFPPT. Tous droits réservés.</p>
+                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE. Tous droits réservés.</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -448,7 +450,7 @@ class OTP_Email(CreatFrame):
                                             </tr>
                                             <tr>
                                                 <td align="center">
-                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Validation de votre adresse e-mail et informations de connexion</h1>
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Les identifiants de connexion à votre compte</h1>
                                                 </td>
                                             </tr>
                                         </table>
@@ -462,7 +464,7 @@ class OTP_Email(CreatFrame):
                                             <tr>
                                                 <td>
                                                     <p style="font-size: 18px; font-weight: 500; margin: 0 0 20px 0;">Bonjour,</p>
-                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous vous informons que votre adresse e-mail a été vérifiée avec succès dans le cadre de la création de votre compte sur la plateforme DD-NOTE-OFPPT, Veuillez saisir ce code dans l’interface de connexion pour connexion et accéder à votre compte.</p>
+                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous vous informons que votre adresse e-mail a été vérifiée avec succès dans le cadre de la création de votre compte sur la plateforme DD-NOTE-OFPPT.Veuillez saisir le code ci-dessous dans l'interface de connexion afin d'accéder à votre compte.</p>
                                                 </td>
                                             </tr>
                                             
@@ -602,7 +604,7 @@ class OTP_Email(CreatFrame):
                                             <!-- Copyright -->
                                             <tr>
                                                 <td align="center">
-                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE-OFPPT. Tous droits réservés.</p>
+                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE. Tous droits réservés.</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -628,7 +630,7 @@ class OTP_Email(CreatFrame):
 
             Merci,
 
-            Votre Équipe d'Application DD-NOTE-OFPPT
+            Votre Équipe d'Application DD-NOTE
         """
 
 
