@@ -145,7 +145,7 @@ class DatabaseInitializer:
             bac TEXT NOT NULL,
             moyenne_bac REAL,
             validation_admin INTEGER DEFAULT 0,
-            statut TEXT DEFAULT 'Actif',
+            statut TEXT DEFAULT 'Non-Actif',
             classe_id INTEGER,
             parent_nom TEXT,
             parent_telephone TEXT,
