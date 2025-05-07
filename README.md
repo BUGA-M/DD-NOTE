@@ -145,11 +145,15 @@ DD-NOTE/
 
 ## 📋 Prérequis
 
-- Python 3.8+
+- flake8
+- bandit
+- black
 - customtkinter
-- python-dotenv
-- cryptography
 - pillow
+- tk
+- dotenv
+- cryptography
+- pysqlcipher3
 
 ---
 
@@ -158,7 +162,7 @@ DD-NOTE/
 Installez les dépendances nécessaires :
 
 ```bash
-pip install customtkinter python-dotenv cryptography pillow
+pip install -r 'requirements.txt'
 ```
 
 ---
