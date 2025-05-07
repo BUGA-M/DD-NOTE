@@ -188,7 +188,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
         <tr>
             <td align="center" width="25%">
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
-                    <img src="https://avatars.githubusercontent.com/u/NomDev1" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <br />
                 <b>BUGA</b><br />
@@ -196,7 +196,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
             </td>
             <td align="center" width="25%">
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
-                    <img src="https://avatars.githubusercontent.com/u/NomDev2" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <br />
                 <b>Youssef</b>
@@ -204,7 +204,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
             </td>
             <td align="center" width="25%">
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
-                    <img src="https://avatars.githubusercontent.com/u/NomDev3" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <br />
                 <b>Imad</b>
@@ -212,7 +212,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
             </td>
             <td align="center" width="25%">
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
-                    <img src="https://avatars.githubusercontent.com/u/NomDev1" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <br />
                 <b>Abdellah</b>
@@ -233,7 +233,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 </a>
 <a href="https://discord.gg/dd-note">
 <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=for-the-badge&logo=discord&logoColor=white">
-</a><br>
+</a><br />
 
 <a href="https://github.com/BUGA-M/DD-NOTE"><img src="https://img.shields.io/badge/⭐%20Star%20le%20projet%20sur%20GitHub-DD--NOTE-4B8BBE?style=for-the-badge&logo=github&logoColor=white" height="40px"></a>
 
