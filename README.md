@@ -190,7 +190,6 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <br />
                 <b>BUGA</b><br />
                 <a href="https://github.com/BUGA-M"><img src="https://img.shields.io/badge/GitHub-BUGA--M-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
@@ -198,7 +197,6 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <br />
                 <b>Youssef</b>
                 <a href="https://github.com/YoussefDev"><img src="https://img.shields.io/badge/GitHub-YoussefDev-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
@@ -206,7 +204,6 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <br />
                 <b>Imad</b>
                 <a href="https://github.com/FatimaDesign"><img src="https://img.shields.io/badge/GitHub-FatimaDesign-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
@@ -214,7 +211,6 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <br />
                 <b>Abdellah</b>
                 <a href="https://github.com/BUGA-M"><img src="https://img.shields.io/badge/GitHub-BUGA--M-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
@@ -231,7 +227,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 <a href="mailto:contact@dd-note.com">
 <img src="https://img.shields.io/badge/Email-contact%40dd--note.com-D14836?style=for-the-badge&logo=gmail&logoColor=white">
 </a>
-<a href="https://discord.gg/dd-note">
+<a href="https://discord.gg/jXFXCw6aKd">
 <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=for-the-badge&logo=discord&logoColor=white">
 </a><br />
 
