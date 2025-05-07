@@ -196,19 +196,19 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <a href="https://github.com/Youssef"><img src="https://img.shields.io/badge/GitHub-YoussefDev-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+                <a href="https://github.com/Youssef"><img src="https://img.shields.io/badge/GitHub-Youssef-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
             <td align="center" width="25%">
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <a href="https://github.com/IMAD"><img src="https://img.shields.io/badge/GitHub-FatimaDesign-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+                <a href="https://github.com/IMAD"><img src="https://img.shields.io/badge/GitHub-IMAD-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
             <td align="center" width="25%">
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/9wilabt.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <a href="https://github.com/Abdellah"><img src="https://img.shields.io/badge/GitHub-BUGA--M-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+                <a href="https://github.com/Abdellah"><img src="https://img.shields.io/badge/GitHub-Abdellah-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
         </tr>
     </table>
