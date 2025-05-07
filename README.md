@@ -1,174 +1,200 @@
-# 🎓 DD-NOTE-OFPPT – Gestion des Notes avec Vérification OTP
+<div align="center">
 
-Un système graphique complet et sécurisé développé en **Python** pour gérer les études dans les établissements ISTA, avec réinitialisation de mot de passe via **OTP** et une interface moderne basée sur **`customtkinter`**.
+# 🎓 DD-NOTE-OFPPT
 
----
+### Système de Gestion des Notes avec Authentification OTP
+  
+[![GitHub stars](https://img.shields.io/github/stars/BUGA-M/DD-NOTE?style=for-the-badge)](https://github.com/BUGA-M/DD-NOTE/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/BUGA-M/DD-NOTE?style=for-the-badge)](https://github.com/BUGA-M/DD-NOTE/network/members)
+[![GitHub license](https://img.shields.io/github/license/BUGA-M/DD-NOTE?style=for-the-badge)](https://github.com/BUGA-M/DD-NOTE/blob/main/LICENSE)
+[![Made with Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![CustomTkinter](https://img.shields.io/badge/UI-CustomTkinter-blue?style=for-the-badge)](https://github.com/TomSchimansky/CustomTkinter)
 
-![Banner](./assets/banner.png)
+<img src="./assets/banner.png" alt="Banner DD-NOTE-OFPPT" width="850px">
 
-![GitHub stars](https://img.shields.io/github/stars/BUGA-M/DD-NOTE?style=flat-square)
-![GitHub forks](https://img.shields.io/github/forks/BUGA-M/DD-NOTE?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/BUGA-M/DD-NOTE?style=flat-square)
-![Made with Python](https://img.shields.io/badge/Made%20with-Python-blue?style=flat-square)
+</div>
 
----
+## 📋 À propos
 
-## ✨ Fonctionnalités Clés
+**DD-NOTE-OFPPT** est une application de gestion académique de nouvelle génération, conçue spécifiquement pour les établissements ISTA. Développée en Python avec une interface graphique moderne, elle intègre un système de sécurité avancé incluant une vérification par code OTP et un chiffrement des données sensibles.
 
-- 🔐 **Vérification par Email (OTP)** – Envoi d'un code sécurisé via `smtplib`
-- ⏱️ **Minuteur de validité (5 min)** – Code expiré automatiquement
-- ⚡ **Vérification instantanée** – Retour immédiat sur l'état du code
-- 🔒 **Réinitialisation sécurisée du mot de passe**
-- 🖼️ **Interface moderne et responsive** – Thème clair/sombre, polices customisées
-- 🧩 **Structure modulaire claire** – Séparation Frontend / Backend / UI
+<div align="center">
+<table>
+<tr>
+<td width="60%">
 
----
+### ✨ Caractéristiques principales
 
-## 🖥️ Aperçu
+- 📝 **Gestion complète des notes (contrôle, examen, moyenne, mention)**
+- 📚 **Organisation des modules et des cours par filière et classe**
+- 📅 **Suivi des absences avec justification et avertissements**
+- 🎓 **Inscription et gestion administrative des étudiants ISTA**
+- 🔐 **Authentification sécurisée par OTP**
+- ⏱️ **Codes temporaires à validité limitée (5 minutes)**
+- 🔄 **Réinitialisation de mot de passe sécurisée**
+- 🌓 **Interface adaptative (thème clair/sombre)**
+- 🖥️ **Design responsive et ergonomique**
+- 🧩 **Architecture modulaire, évolutive et maintenable**
+- 🔒 **Chiffrement Fernet des données sensibles**
 
-![Aperçu Acceuil](./Custom/pic/acc.png)
-![Aperçu OTP](./Custom/pic/otp.png)
 
----
+</td>
+<td width="40%">
 
-## 🚀 Installation
+<img src="./Custom/pic/otp.png" alt="Interface OTP" width="100%">
+<p align="center"><i>Interface de vérification OTP</i></p>
 
-### 1️⃣ Cloner le dépôt
+</td>
+</tr>
+</table>
+</div>
+
+## 🖼️ Aperçu de l'application
+
+<div align="center">
+<img src="./Custom/pic/acc.png" alt="Interface d'accueil" width="80%">
+<p><i>Interface d'accueil de DD-NOTE</i></p>
+</div>
+
+## 🚀 Guide d'installation
+
+### Prérequis
+
+- Python 3.11.2 ou supérieur
+- Gestionnaire de paquets pip
+
+### Installation en 4 étapes
+
+<details>
+<summary><b> 1️⃣  Cloner le dépôt</b></summary>
+
 ```bash
 git clone https://github.com/BUGA-M/DD-NOTE.git
 cd DD-NOTE
 ```
+</details>
 
-### 2️⃣ Créer un fichier .env
-Créez un fichier `.env` à la racine du projet avec les variables suivantes :
-```
-EMAIL_SENDER=youremail@gmail.com
-EMAIL_PASSWORD=your_email_password
-```
-> ✅ Utilisez un mot de passe d'application pour Gmail si 2FA est activée.
+<details>
+<summary><b> 2️⃣  Installer les dépendances</b></summary>
 
-### 3️⃣ Créer le fichier Backend/config.py
+```bash
+pip install -r requirements.txt
+```
+
+#### Dépendances principales
+- customtkinter
+- pillow
+- cryptography
+- python-dotenv
+- pysqlcipher3
+</details>
+
+<details>
+<summary><b> 3️⃣  Configuration du système</b></summary>
+
+#### Créer un fichier `.env` à la racine
+```
+EMAIL_SENDER=votre_email@gmail.com
+EMAIL_PASSWORD=votre_mot_de_passe_app
+```
+> **Note :** Pour Gmail avec 2FA, utilisez un [mot de passe d'application](https://support.google.com/accounts/answer/185833).
+
+#### Créer le fichier `Backend/config.py`
 ```python
-# Backend/config.py
 import os
 
-# Clé de chiffrement Fernet (à générer avec Fernet.generate_key())
-FERNET_KEY = b"your_fernet_key_here"
+# Clé de chiffrement Fernet
+FERNET_KEY = b"votre_clé_fernet_générée"
 
+# Configuration des chemins
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 DB_PATH = os.path.join(DATA_DIR, 'dd_note.db')
 ```
 
-> 🔐 Pour générer une clé Fernet :
-> ```python
-> from cryptography.fernet import Fernet
-> print(Fernet.generate_key())
-> ```
+Pour générer une clé Fernet sécurisée :
+```python
+from cryptography.fernet import Fernet
+print(Fernet.generate_key())
+```
+</details>
 
-### 4️⃣ Lancer le programme
+<details>
+<summary><b> 4️⃣  Lancer l'application</b></summary>
+
 ```bash
 python main.py
 ```
+</details>
 
----
-
-## 📁 Structure du projet
+## 🏗️ Architecture du projet
 
 ```
 DD-NOTE/
-├── .env                    # Informations d'identification email (non versionné)
-├── .gitignore              # Fichiers à ignorer par git
-├── dd_note.db              # Base de données SQLite
-├── fernet_key.py           # Script pour générer la clé Fernet
+├── Backend/                # Logique métier et sécurité
+│   ├── config.py           # Configuration et clés de chiffrement
+│   ├── db/                 # Gestion de la base de données
+│   ├── models/             # Modèles de données
+│   ├── services/           # Services (OTP, email, etc.)
+│   └── utils/              # Utilitaires et fonctions d'aide
+├── Custom/                 # Composants UI personnalisés
+│   ├── db_fonts/           # Polices personnalisées
+│   ├── Pic/                # Images et ressources graphiques
+│   ├── Button.py           # Boutons customisés
+│   ├── Theme_controls.py   # Gestion des thèmes
+│   └── ...                 # Autres éléments d'interface
+├── Frontend/               # Écrans et interfaces utilisateur
+│   ├── OTP.py              # Écran de vérification OTP
+│   ├── connexion.py        # Écran de connexion
+│   ├── Saisie.py           # Interface de saisie des notes
+│   └── ...                 # Autres écrans
+├── .env                    # Variables d'environnement (non versionné)
 ├── main.py                 # Point d'entrée de l'application
+├── fernet_key.py           # Script pour générer la clé Fernet
+├── .gitignore              # Fichiers à ignorer par git
 ├── pyproject.toml          # Configuration du projet Python (optionnel)
 ├── README.md               # Documentation du projet
-├── requirements.txt        # Dépendances Python
-├── test.csv                # Exemple de fichier CSV (utilitaire ?)
-├── test.py                 # Script de test
-├── Test/                   # Dossier de tests unitaires
-│   └── test-fernet.py
-├── Backend/                # Backend (OTP, sécurité, base de données, logique)
-│   ├── __init__.py
-│   ├── config.py           # Clé Fernet + chemin vers la DB
-│   ├── data/
-│   ├── db/
-│   ├── exceptions/
-│   ├── models/
-│   ├── services/
-│   └── utils/
-├── Custom/                 # Composants graphiques personnalisés
-│   ├── __init__.py
-│   ├── db_fonts/
-│   ├── Pic/
-│   ├── Position/
-│   ├── Button.py
-│   ├── ChangeFrame.py
-│   ├── ComboBox.py
-│   ├── DataBase.py
-│   ├── Entry.py
-│   ├── Font.py
-│   ├── Frame.py
-│   ├── Image.py
-│   ├── Label.py
-│   ├── OptionMenu.py
-│   ├── Popup.py
-│   ├── secondWindow.py
-│   ├── theme_colors.json
-│   ├── Theme_controls.py
-│   └── Theme_current.json
-├── Frontend/               # Interface utilisateur (écrans, frames)
-│   ├── __init__.py
-│   ├── fonts_installed/
-│   ├── Change_Password.py
-│   ├── connexion.py
-│   ├── CreatAccount.py
-│   ├── ForgetPassword.py
-│   ├── OTP_Email.py
-│   ├── OTP.py
-│   └── Saisie.py
-└── venv/                   # Environnement virtuel (à ignorer dans .gitignore)
+└── requirements.txt        # Liste des dépendances
 
 ```
-
----
 
 ## 🛡️ Sécurité
 
-- ✅ Chiffrement des mots de passe via Fernet (cryptography)
-- 🔁 Code OTP temporaire avec durée limitée
-- 🚫 Accès protégé aux fonctions critiques
+DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
+
+- **Chiffrement Fernet** pour les mots de passe et données sensibles
+- **Authentification multi-facteurs** via codes OTP envoyés par email
+- **Validation temporelle** limitant la validité des codes à 5 minutes
+- **Protection contre les accès non autorisés** aux fonctionnalités critiques
+- **Base de données sécurisée** avec SQLCipher
+
+## 🧪 Outils de développement
+
+- **customtkinter** – Interface graphique moderne et responsive
+- **pillow** – Gestion des images (PNG, JPEG, etc.)
+- **tk** – Interface Tkinter de base (intégrée à Python)
+- **python-dotenv** – Chargement sécurisé des variables d’environnement .env
+- **cryptography** – Chiffrement Fernet des données sensibles
+- **pysqlcipher3** – Base de données SQLite chiffrée avec SQLCipher
+- **flake8** - Linting et vérification du code
+- **bandit** - Analyse de sécurité du code
+- **black** - Formatage automatique du code
+
+## 📬 Contact
+
+**BUGA-M** - [@github](https://github.com/BUGA-M)
+
+**Lien du projet :** [https://github.com/BUGA-M/DD-NOTE](https://github.com/BUGA-M/DD-NOTE)
 
 ---
 
-## 📋 Prérequis
+<div align="center">
+<p>
+  <i>Développé avec ❤️ pour les établissements ISTA de l'OFPPT</i>
+</p>
 
-- flake8
-- bandit
-- black
-- customtkinter
-- pillow
-- tk
-- dotenv
-- cryptography
-- pysqlcipher3
-
----
-
-## 📦 Dépendances
-
-Installez les dépendances nécessaires :
-
-```bash
-pip install -r 'requirements.txt'
-```
-
----
-
-## 📧 Contact
-
-BUGA-M - [@github](https://github.com/BUGA-M)
-
-Lien du projet : [https://github.com/BUGA-M/DD-NOTE](https://github.com/BUGA-M/DD-NOTE)
+![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg?style=flat&logo=python&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+![CustomTkinter](https://img.shields.io/badge/UI-CustomTkinter-4B8BBE?style=flat)
+</div>
