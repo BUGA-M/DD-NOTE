@@ -175,13 +175,7 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 - **bandit** - Analyse de sécurité du code
 - **black** - Formatage automatique du code
 
-## 📬 Contact
-
-**BUGA-M** - [@github](https://github.com/BUGA-M)
-
-**Lien du projet :** [https://github.com/BUGA-M/DD-NOTE](https://github.com/BUGA-M/DD-NOTE)
-
----
+## 📬 Contacts des développeurs
 
 <div align="center">
     <table>
