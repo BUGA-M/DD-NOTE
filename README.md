@@ -184,9 +184,55 @@ DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
 ---
 
 <div align="center">
-<p>
-  <i>Développé avec ❤️ pour les établissements ISTA de l'OFPPT</i>
-</p>
+    <table>
+        <tr>
+            <td align="center" width="25%">
+                <img src="./Custom/pic/9wilabt.jpeg" style="border-radius:50%" width="100px">
+                <br />
+                <b>BUGA</b><br />
+                <a href="https://github.com/BUGA-M"><img src="https://img.shields.io/badge/GitHub-BUGA--M-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+            </td>
+            <td align="center" width="25%">
+                <img src="./Custom/pic/9wilabt.jpeg" style="border-radius:50%" width="100px">
+                <br />
+                <b>Youssef</b>
+                <a href="https://github.com/Youssef">
+                    <img src="https://img.shields.io/badge/GitHub-YoussefDev-181717?style=for-the-badge&logo=github&logoColor=white">
+                </a>
+            </td>
+            <td align="center" width="25%">
+                <img src="./Custom/pic/9wilabt.jpeg" style="border-radius:50%" width="100px">
+                <br />
+                <b>Imad</b>
+                <a href="https://github.com/Imad"><img src="https://img.shields.io/badge/GitHub-FatimaDesign-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+            </td>
+                        <td align="center" width="25%">
+                <img src="./Custom/pic/9wilabt.jpeg" style="border-radius:50%" width="100px">
+                <br />
+                <b>Abdellah</b>
+                <a href="https://github.com/ABDELLAH"><img src="https://img.shields.io/badge/GitHub-BUGA--M-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+## 📬 Contactez-nous
+
+<div align="center">
+
+### Nous sommes à votre écoute pour toute question ou suggestion !
+
+<a href="mailto:ddnote.ma@gmail.com">
+    <img src="https://img.shields.io/badge/Email-contact%40dd--note.com-D14836?style=for-the-badge&logo=gmail&logoColor=white">
+</a>
+<a href="https://discord.gg/ZTr6FMb5">
+    <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=for-the-badge&logo=discord&logoColor=white">
+</a>
+<a href="https://github.com/BUGA-M/DD-NOTE">
+    <img src="https://img.shields.io/badge/⭐%20Star%20le%20projet%20sur%20GitHub-DD--NOTE-4B8BBE?style=for-the-badge&logo=github&logoColor=white" height="40px">
+</a>
+
+<p><i>Développé avec ❤️ pour les établissements ISTA de l'OFPPT</i></p>
 
 ![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg?style=flat&logo=python&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
