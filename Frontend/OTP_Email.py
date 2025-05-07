@@ -380,7 +380,7 @@ class OTP_Email(CreatFrame):
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
-            if self.basedonnee.modifier_code_verification(email_receiver,code):
+            if self.codeOTP.enregistrer_code(email_receiver,code):
                 messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}") 
@@ -673,7 +673,7 @@ class OTP_Email(CreatFrame):
             self.timer_running = False
             self.after(0, lambda: self.timer_label.configure(text="Temps expiré!", text_color="#e53e3e"))
             self.after(0, self.disable_verification)
-            self.change_to_accueil()
+            self.change_to_connecte()
             return
             
 
@@ -731,7 +731,7 @@ class OTP_Email(CreatFrame):
         otp_code = ''.join([entry.get() for entry in self.otp_entries])
 
         if self.codeOTP.incrementer_tentative(self.EmailClient) == 'destroy':
-            self.change_to_accueil()
+            self.change_to_connecte()
             return
 
         if len(otp_code) != 6:
@@ -743,7 +743,7 @@ class OTP_Email(CreatFrame):
             messagebox.showinfo("Succès", "Code OTP vérifié avec succès !")
             self.sendPassword(self.EmailClient)
             self.codeOTP.valider_code(self.EmailClient, Code)
-            self.change_to_accueil()
+            self.change_to_connecte()
             return
         else:
             messagebox.showerror("Erreur", "Code OTP incorrect.")
@@ -772,6 +772,12 @@ class OTP_Email(CreatFrame):
             lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","Formateur")
         ]
         manager.show_frame(lambda parent: ConnexionFrame(parent,FrameSinscrire))
+        
+    def change_to_connecte(self):
+        from Frontend.Siscrire import Apk
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
     
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")
