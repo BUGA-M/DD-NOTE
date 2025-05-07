@@ -333,7 +333,7 @@ class CreatAccount(CreatFrame):
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Réinitialisation de mot de passe</title>
+                <title>Vérification de l'adresse e-mail via un code OTP</title>
                 <!--[if mso]>
                 <style type="text/css">
                     table, td {{font-family: Arial, Helvetica, sans-serif;}}
@@ -372,7 +372,7 @@ class CreatAccount(CreatFrame):
                                             </tr>
                                             <tr>
                                                 <td align="center">
-                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Réinitialisation de mot de passe</h1>
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Vérification de l'adresse e-mail via un code OTP</h1>
                                                 </td>
                                             </tr>
                                         </table>
@@ -386,7 +386,9 @@ class CreatAccount(CreatFrame):
                                             <tr>
                                                 <td>
                                                     <p style="font-size: 18px; font-weight: 500; margin: 0 0 20px 0;">Bonjour,</p>
-                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte DD-NOTE-OFPPT. Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous.</p>
+                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">
+                                                        Nous avons reçu une demande de création de compte pour votre adresse e-mail sur DD-NOTE.Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous
+                                                    </p>
                                                 </td>
                                             </tr>
                                             
@@ -438,7 +440,7 @@ class CreatAccount(CreatFrame):
                                                             <td style="padding: 25px;">
                                                                 <h3 style="margin-top: 0; color: {self.theme_data['title']}; font-size: 18px; font-weight: 600; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid {self.theme_data['title']}; display: inline-block;">Support technique</h3>
                                                                 <p style="font-size: 15px; line-height: 24px; margin: 0;">
-                                                                    📧 support@ddnote-ofppt.ma<br>
+                                                                    📧 ddnote.ma@gmail.com<br>
                                                                     📞 +212 6 66 66 66 66<br>
                                                                     🏢 OFPPT - Dévelopement Digital
                                                                 </p>
@@ -526,7 +528,7 @@ class CreatAccount(CreatFrame):
                                             <!-- Copyright -->
                                             <tr>
                                                 <td align="center">
-                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE-OFPPT. Tous droits réservés.</p>
+                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE. Tous droits réservés.</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -542,18 +544,18 @@ class CreatAccount(CreatFrame):
 
         # Version texte simple pour les clients email qui ne supportent pas HTML
         text_content = f"""\
-        Réinitialisation de mot de passe DD-NOTE-OFPPT
+            Réinitialisation de mot de passe DD-NOTE-OFPPT
 
-        Bonjour,
+            Bonjour,
 
-        Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.
-        Votre code de vérification est : {code}
-        Ce code est valable pendant 5 minutes.
+            Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.
+            Votre code de vérification est : {code}
+            Ce code est valable pendant 5 minutes.
 
-        Ne partagez jamais ce code avec qui que ce soit.
+            Ne partagez jamais ce code avec qui que ce soit.
 
-        Cordialement,
-        L'équipe DD-NOTE-OFPPT
+            Cordialement,
+            L'équipe DD-NOTE-OFPPT
         """
 
         # Ajouter les deux versions au message

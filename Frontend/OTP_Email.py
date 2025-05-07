@@ -149,7 +149,7 @@ class OTP_Email(CreatFrame):
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Réinitialisation de mot de passe</title>
+                <title>Vérification de l'adresse e-mail via un code OTP</title>
                 <!--[if mso]>
                 <style type="text/css">
                     table, td {{font-family: Arial, Helvetica, sans-serif;}}
@@ -360,7 +360,7 @@ class OTP_Email(CreatFrame):
 
         # Version texte simple pour les clients email qui ne supportent pas HTML
         text_content = f"""\
-        Réinitialisation de mot de passe DD-NOTE-OFPPT
+        Réinitialisation de mot de passe DD-NOTE
 
         Bonjour,
 
@@ -371,7 +371,7 @@ class OTP_Email(CreatFrame):
         Ne partagez jamais ce code avec qui que ce soit.
 
         Cordialement,
-        L'équipe DD-NOTE-OFPPT
+        L'équipe DD-NOTE
         """
 
         # Ajouter les deux versions au message
@@ -383,7 +383,12 @@ class OTP_Email(CreatFrame):
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
             if self.codeOTP.enregistrer_code(email_receiver,code):
-                messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+                messagebox.showinfo(
+                    "Succès",
+                    "Le code de vérification a été envoyé à votre adresse e-mail avec succès.\n"
+                    "Si vous ne voyez pas l'e-mail dans votre boîte de réception, veuillez vérifier votre dossier de courriers indésirables (spam)."
+                )
+
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}") 
     
@@ -450,7 +455,7 @@ class OTP_Email(CreatFrame):
                                             </tr>
                                             <tr>
                                                 <td align="center">
-                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Les identifiants de connexion à votre compte</h1>
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Le mot de pass de connexion à votre compte</h1>
                                                 </td>
                                             </tr>
                                         </table>
@@ -464,7 +469,7 @@ class OTP_Email(CreatFrame):
                                             <tr>
                                                 <td>
                                                     <p style="font-size: 18px; font-weight: 500; margin: 0 0 20px 0;">Bonjour,</p>
-                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous vous informons que votre adresse e-mail a été vérifiée avec succès dans le cadre de la création de votre compte sur la plateforme DD-NOTE-OFPPT.Veuillez saisir le code ci-dessous dans l'interface de connexion afin d'accéder à votre compte.</p>
+                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous vous informons que votre adresse e-mail a été vérifiée avec succès dans le cadre de la création de votre compte sur la plateforme DD-NOTE.Veuillez saisir le code ci-dessous dans l'interface de connexion afin d'accéder à votre compte.</p>
                                                 </td>
                                             </tr>
                                             
@@ -642,9 +647,14 @@ class OTP_Email(CreatFrame):
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
-            #----------- enregistrement de password generer
+            #----------- enregistrement de password generer ---------
             #if self.codeOTP.enregistrer_code(email_receiver,password):
-            messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            messagebox.showinfo(
+                "Succès",
+                "Le mot de pass de connexion à votre compte a été envoyé à votre adresse e-mail avec succès.\n"
+                "Si vous ne voyez pas l'e-mail dans votre boîte de réception, veuillez vérifier votre dossier de courriers indésirables (spam)."
+            )
+
         except Exception as e:
             messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}")
     
