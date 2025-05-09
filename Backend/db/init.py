@@ -131,19 +131,20 @@ class DatabaseInitializer:
         -- Table Étudiants
         CREATE TABLE IF NOT EXISTS etudiant (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            code_apogee TEXT UNIQUE,
             nom TEXT NOT NULL,
             prenom TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
-            niveau_scolaire TEXT NOT NULL,
             date_naissance TEXT NOT NULL,
+            niveau_scolaire TEXT NOT NULL,
+            typebac TEXT NOT NULL,
+            bac_year TEXT NOT NULL,
+            filiere_nom TEXT NOT NULL,
             sexe TEXT NOT NULL,
             adresse TEXT,
             telephone TEXT,
-            filiere_nom TEXT NOT NULL,
-            bac TEXT NOT NULL,
             moyenne_bac REAL,
+            email_valide INTEGER DEFAULT 0, 
             validation_admin INTEGER DEFAULT 0,
             statut TEXT DEFAULT 'Non-Actif',
             classe_id INTEGER,
@@ -154,6 +155,7 @@ class DatabaseInitializer:
             updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (classe_id) REFERENCES classe(id) ON DELETE SET NULL ON UPDATE CASCADE
         );
+
 
         -- Table Modules
         CREATE TABLE IF NOT EXISTS module (

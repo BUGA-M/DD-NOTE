@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import tkinter as tk
 from tkinter import messagebox
 import csv, re, random
 import sqlite3
@@ -8,14 +9,15 @@ import ssl
 from pathlib import Path
 from datetime import datetime
 from Frontend.ForgetPassword import ForgetPassword
-from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, FontInstaller, ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
+from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, CreatOptionMenu, FontInstaller, ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
 from Frontend.Siscrire import Apk
 from dotenv import load_dotenv
 import sqlite3
 import os
 import hashlib
 from datetime import datetime
-from Backend.models import EtudiantManager,CodeVerificationManager
+from Backend.models import EtudiantManager,CodeVerificationManager,OrientationOFPPT,Validation
+from Backend.config import NEW_ACC_KEY
 
 class CreatAccount(CreatFrame):
     def __init__(self, master):
@@ -36,16 +38,40 @@ class CreatAccount(CreatFrame):
         #self.basedonne=BaseDonnees()
         self.EtudiantManager=EtudiantManager()
         self.codeOTP=CodeVerificationManager()
+        self.bac_var = tk.StringVar()
 
         self.sexe = ["Homme", "Femme"]
         self.niv_scolaire  = ["6éme année primaire", "3ème année collége", "Niveau Bac", "Baccalauréat"]
+        self.ListBac = [
+            "Sciences Mathématiques A",
+            "Sciences Mathématiques B",
+            "Sciences Physiques",
+            "Sciences de la Vie et de la Terre",
+            "Sciences Agronomiques",
+            "Sciences et Technologies Électriques",
+            "Sciences et Technologies Mécaniques",
+            "Arts Appliqués",
+            "Sciences Économiques",
+            "Sciences de Gestion Comptable",
+            "Lettres",
+            "Sciences Humaines",
+            "Sciences Islamiques",
+            "2ème Bac Sciences Mathématiques A (BIOF)",
+            "2ème Bac Sciences Mathématiques B (BIOF)",
+            "2ème Bac Sciences Physiques (BIOF)",
+            "2ème Bac Sciences de la Vie et de la Terre (SVT) (BIOF)",
+            "2ème Bac Sciences Agronomiques (BIOF)",
+            "2ème Bac Sciences et Technologies Électriques (BIOF)",
+            "2ème Bac Sciences et Technologies Mécaniques (BIOF)"
+        ]
+        self.Validation_class = Validation()
         self.CreatInterface()
     
     def CreatInterface(self):
         self.pathReturn = Path("./Custom/pic/return.png").resolve()
         self.picReturn = CreateImage(str(self.pathReturn), width=20, height=20)
 
-        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_accueil,fg_color=self.theme_data["title"])
+        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_connecte,fg_color=self.theme_data["title"])
         self.returnButton.buttonPlace(0.07,0.07, "center")
         self.returnButton.buttonConfig(font=(self.type_font, 14, "bold"))
 
@@ -60,40 +86,69 @@ class CreatAccount(CreatFrame):
         self.subtitle.LabelConfig(font=(self.subtitle, 13, "bold"))
 
         self.nom = CreatEntry(self, 235, 42, 7, 0, placeholder_text="Votre Nom *", Font_size=12)
-        self.nom.EntryPlace(0.27, 0.29, "center")
 
         self.prenom = CreatEntry(self, 235, 42, 7, 0, placeholder_text="Votre Prenom *",Font_size=12)
-        self.prenom.EntryPlace(0.73, 0.29, "center")
 
-        self.Sexe=CreatComboBox(self,self.sexe,235,42,fg_color="white",bg_color="transparent",text_color="#9E9E9E",corner_radius=7, state="readonly",button_color=self.theme_data["button_hover"],border_width=0)
-        self.Sexe.ComboBoxPlace(0.27, 0.39, "center")
+        self.Sexe = CreatOptionMenu(
+            master=self,
+            values=self.sexe,
+            width=235,
+            height=42,
+            fg_color="white",
+            bg_color="transparent",
+            text_color="#3E3E3E",
+            corner_radius=7, 
+            state="readonly",
+            button_color=self.theme_data["button_hover"],
+            dropdown_fg_color=self.theme_data["title"]
+        )
         self.Sexe.set("Votre Sexe *")
 
-        self.dateNaissance=CreatEntry(self,235,42,7,0,placeholder_text="Votre Date Naissance *",Font_size=12)
-        self.dateNaissance.EntryPlace(0.73,0.39,"center")
+        self.dateNaissance=CreatEntry(self,235,42,7,0,placeholder_text="Votre Date Naissance *",Font_size=12,text_color="#3E3E3E")
 
         self.Bac=CreatEntry(self,235,42,7,0,placeholder_text="Votre Année de bac *",Font_size=12)
-        self.Bac.EntryPlace(0.27,0.49,"center")
 
-        self.Niv_Scolaire=CreatComboBox(self,self.niv_scolaire,235,42,fg_color="white",bg_color="transparent",text_color="#9E9E9E",corner_radius=7, state="readonly",button_color=self.theme_data["button_hover"],border_width=0)
-        self.Niv_Scolaire.ComboBoxPlace(0.73,0.49,"center")
+        self.TypeBAC=CreatOptionMenu(self,self.ListBac,width=485,height=42,text_color="#3E3E3E",corner_radius=7, state="readonly",button_color=self.theme_data["button_hover"],command=self.bac_selectionner,dropdown_fg_color=self.theme_data["title"])
+        self.TypeBAC.set("Pas de Bac")
+
+        self.Niv_Scolaire = CreatOptionMenu(
+            master=self,
+            values=self.niv_scolaire,
+            width=235,
+            height=42,
+            fg_color="white",
+            bg_color="transparent",
+            text_color="#3E3E3E",
+            corner_radius=7,
+            state="readonly",
+            button_color=self.theme_data["button_hover"],
+            dropdown_fg_color=self.theme_data["title"]
+        )
         self.Niv_Scolaire.set("Votre Niveau scolaire *")
 
-        self.Filiere=CreatComboBox(self,[],485,42,fg_color="white",bg_color="transparent",text_color="#9E9E9E",corner_radius=7, state="readonly",button_color=self.theme_data["button_hover"],border_width=0)
-        self.Filiere.ComboBoxPlace(0.5,0.59,"center")
+        self.Filiere = CreatOptionMenu(
+            master=self,
+            values=[],
+            width=485,
+            height=42,
+            fg_color="white",
+            bg_color="transparent",
+            text_color="#3E3E3E",
+            corner_radius=7,
+            state="readonly",
+            button_color=self.theme_data["button_hover"],
+            dropdown_fg_color=self.theme_data["title"]
+        )
         self.Filiere.set("Votre Filiéres *")
 
-        self.Niv_Scolaire.ComboBoxConfig(command=lambda value: self.check_niveau())
+        self.Niv_Scolaire.update_options(command=lambda value: self.check_niveau())
 
-        self.email=CreatEntry(self,485,42,7,0,placeholder_text="Votre Email *",Font_size=12)
-        self.email.EntryPlace(0.5,0.69,"center")
+        self.email=CreatEntry(self,485,42,7,0,placeholder_text="Votre Email *",Font_size=12,text_color="#3E3E3E")
 
         self.buttonConnect=CreatButton(self,"Valide",485,35,command=self.valide_formulaire,fg_color=self.theme_data["title"])
-        self.buttonConnect.buttonPlace(0.5,0.80,"center")
         self.buttonConnect.buttonConfig(font=(self.type_font,14,"bold"))
 
         self.ConnecteAccount=CreatButton(self,"Vous avez un compte ? Connectez-vous ici",text_color="#B0B0B0",hover_color="#2C3440",fg_color="transparent",corner_radius=7,height=30,command=self.change_to_connecte)
-        self.ConnecteAccount.buttonPlace(0.5,0.87,"center")
         self.ConnecteAccount.bind("<Enter>", self.on_entre)
         self.ConnecteAccount.bind("<Leave>", self.on_leave)
         self.footer=CreatLabel(
@@ -104,39 +159,80 @@ class CreatAccount(CreatFrame):
             text_color="white",
             bg_color="transparent"
         )
-
-        self.footer.LabelPlace(relx=0.5,rely=0.94,anchor="center")
+        # enmplacement des widgets dans le frame
+        self.Bac_Non_Selected()
         self.show_Frame()
 
+    def Bac_Non_Selected(self):
+        self.nom.EntryPlace(0.27, 0.29, "center")
+        self.prenom.EntryPlace(0.73, 0.29, "center")
+        self.Sexe.place_option_menu(0.27, 0.39, "center")
+        self.dateNaissance.EntryPlace(0.73,0.39,"center")
+        self.Bac.EntryPlace(0.27,0.49,"center")
+        self.Niv_Scolaire.place_option_menu(0.73,0.49,"center")
+        self.TypeBAC.place_option_menu(0.5,0.59,"center")
+        self.Filiere.place_option_menu(0.5,0.59,"center")
+        self.email.EntryPlace(0.5,0.69,"center")
+        self.buttonConnect.buttonPlace(0.5,0.80,"center")
+        self.ConnecteAccount.buttonPlace(0.5,0.87,"center")
+        self.footer.LabelPlace(relx=0.5,rely=0.94,anchor="center")
+        self.configure(height=550)
+        self.TypeBAC.set("Pas de Bac")
+        self.bac_var.set("Votre Année de bac *")
+        self.Bac.configure(state="readonly")
+        
+    def Bac_Selected(self):
+        self.nom.EntryPlace(0.27, 0.29, "center")
+        self.prenom.EntryPlace(0.73, 0.29, "center")
+        self.Sexe.place_option_menu(0.27, 0.38, "center")
+        self.dateNaissance.EntryPlace(0.73,0.38,"center")
+        self.Bac.EntryPlace(0.27,0.47,"center")
+        self.Niv_Scolaire.place_option_menu(0.73,0.47,"center")
+        self.TypeBAC.place_option_menu(0.5,0.56,"center")
+        self.Filiere.place_option_menu(0.5,0.65,"center")
+        self.email.EntryPlace(0.5,0.74,"center")
+        self.buttonConnect.buttonPlace(0.5,0.84,"center")
+        self.ConnecteAccount.buttonPlace(0.5,0.92,"center")
+        self.footer.LabelPlace(relx=0.5,rely=0.97,anchor="center")
+        self.configure(height=590)
+        self.TypeBAC.set("Votre type de BAC")
+        self.Bac.configure(state="normal")
+        #self.bac_var.set("YYYY") 
+        
+    def bac_selectionner(self, selected_bac):
+        if self.Niv_Scolaire.get() == "Baccalauréat":
+            self.filières_ofppt = OrientationOFPPT.get_filiere_from_bac(selected_bac)
+            self.Filiere.update_options(values=self.filières_ofppt)
+            self.Filiere.set("Votre Filiéres *")
+   
     def check_niveau(self):
         selected_niveau = self.Niv_Scolaire.get()
-
+        
         if selected_niveau == "6éme année primaire":
             self.filières_ofppt = [
-                "Gestion Hôtelière", "Génie Civil", "Électromécanique", "Mécanique",
-                "Électricité", "Gestion", "Tourisme", "BTP (Bâtiment et Travaux Publics)"
+                "gestion hôtelière", "génie civil", "électromécanique", "mécanique",
+                "électricité", "gestion", "tourisme", "btp (bâtiment et travaux publics)"
             ]
+            self.Bac_Non_Selected()
         elif selected_niveau == "Baccalauréat":
-            self.filières_ofppt = [
-                "Développement Digital", "Réseaux Informatiques", "Gestion des Entreprises",
-                "Gestion Hôtelière", "Génie Civil", "Électromécanique", "Gestion",
-                "Tourisme", "BTP (Bâtiment et Travaux Publics)"
-            ]
+            self.filières_ofppt =[]
+            self.Bac_Selected()
         elif selected_niveau == "Niveau Bac":
             self.filières_ofppt = [
-                "Développement Digital", "Réseaux Informatiques", "Génie Civil",
-                "Pâtisserie", "Métiers de la Coiffure et Esthétique", 
-                "Plomberie Sanitaire", "Menuiserie Aluminium et Bois"
+                "pâtisserie", "métiers de la coiffure et esthétique", 
+                "plomberie sanitaire", "menuiserie aluminium et bois"
             ]
+            self.Bac_Non_Selected()
         elif selected_niveau == "3ème année collége":
             self.filières_ofppt = [
-                "Pâtisserie", "Métiers de la Coiffure et Esthétique", 
-                "Plomberie Sanitaire", "Menuiserie Aluminium et Bois"
+                "pâtisserie", "métiers de la coiffure et esthétique", 
+                "plomberie sanitaire", "menuiserie aluminium et bois"
             ]
+            self.Bac_Non_Selected()
         else:
             self.filières_ofppt=[]
         
-        self.Filiere.ComboBoxConfig(values=self.filières_ofppt)
+        self.Filiere.update_options(values=self.filières_ofppt)
         self.Filiere.set("Votre Filiéres *")
 
 
@@ -155,6 +251,12 @@ class CreatAccount(CreatFrame):
         manager=ChangeFrame(self.master)
         manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
 
+    def change_to_connecte(self):
+        from Frontend.Siscrire import Apk
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
+        
     def change_to_accueil(self):
         from Frontend.connexion import ConnexionFrame
         self.destroy()
@@ -165,144 +267,53 @@ class CreatAccount(CreatFrame):
             lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","Formateur")
         ]
         manager.show_frame(lambda parent: ConnexionFrame(parent,FrameSinscrire))
-
-    def validate_nom_prenom(self, valeur, champ_nom):
-        if not valeur:
-            messagebox.showerror("Erreur", f"Le {champ_nom} est obligatoire.")
-            return False
-        if len(valeur) < 2:
-            messagebox.showerror("Erreur", f"Le {champ_nom} doit contenir au moins 2 caractères.")
-            return False
-        if not re.match(r'^[A-Za-zÀ-ÖØ-öø-ÿ\s\-]+$', valeur):
-            messagebox.showerror("Erreur", f"Le {champ_nom} contient des caractères invalides.")
-            return False
-        return True
-
-
-
-    def validate_sexe(self, sexe):
-        if not sexe:
-            messagebox.showerror('error', 'Le sexe est obligatoire.')
-            return False
-        sexe = sexe.lower()
-        if sexe not in ['homme', 'femme']:
-            messagebox.showerror('error', "Veuillez entrer 'Homme', 'Femme'")
-            return False
-        return True
-    
-    def validate_date_naissance(self, date_str):
-        if not date_str:
-            messagebox.showerror('error','La date de naissance est obligatoire.')
-            return False
-        date_formats=["%d/%m/%Y","%d-%m-%Y"]
-        for i in date_formats:
-            try:
-                date_obj = datetime.strptime(date_str, i)
-                now = datetime.now()
-
-                if date_obj > now:
-                    messagebox.showerror('error', 'La date de naissance doit être dans le passé.')
-                    return False
-
-                age = now.year-date_obj.year-((now.month, now.day) < (date_obj.month, date_obj.day))
-                if age < 15:
-                    messagebox.showerror('error', 'Vous devez avoir au moins 15 ans pour vous inscrire.')
-                    return False
-                
-                return True
-            except ValueError:
-                pass
-        messagebox.showerror('error','Format de date invalide. Utilisez JJ/MM/AAAA ou JJ-MM-AAAA.')
-        return False
-
-
-    def validate_bac_year(self, year_str):
-        if not year_str:
-            messagebox.showerror('error', 'L\'année du bac est obligatoire.')
-            return False
-
-        try:
-            year = int(year_str)
-            if 2013 <= year <= 2025:
-                return True
-            else:
-                messagebox.showerror('error', 'L\'année du bac doit être entre 2013 et 2025.')
-                return False
-        except ValueError:
-            messagebox.showerror('error', 'Format invalide. Entrez une année valide (ex: 2018).')
-            return False
-
-
-    def validate_dropdowns(self):
-        if self.Niv_Scolaire.get()=="Votre Niveau scolaire *":
-            messagebox.showerror("error", "Veuillez sélectionner un niveau scolaire.")
-            return False
-        if self.Bac.get() == "Votre Année de bac *":
-            messagebox.showerror("error", "Veuillez sélectionner un type de Bac.")
-            return False
-        if self.Filiere.get() == "Votre Filiéres *":
-            messagebox.showerror("error", "Veuillez sélectionner un type de Filiére.")
-            return False
-        return True
-    
-    def validate_email(self, email):
-        if not email:
-            messagebox.showerror('error', "L'adresse email est obligatoire.")
-            return False
-        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-        
-        if not re.match(email_pattern, email):
-            messagebox.showerror('error', "Format d'email invalide.")
-            return False
-
-        common_domains={
-            'gmail.co':'gmail.com',
-            'gmail.fr':'gmail.com',
-            'gmial.com':'gmail.com',
-            'gamil.com':'gmail.com',
-            'yahooo.com':'yahoo.com',
-            'yaho.com':'yahoo.com',
-            'hotmial.com':'hotmail.com',
-            'hotmil.com':'hotmail.com',
-            'outook.com':'outlook.com'
-        }
-        domain = email.split('@')[-1]
-        if domain in common_domains:
-            corrected_domain = common_domains[domain]
-            corrected_email = email.replace(domain, corrected_domain)
-            messagebox.showerror('error', f"Vouliez-vous dire {corrected_email}?")
-            return False
-        return True
     
     def valide_formulaire(self):
         try:
             nom = self.nom.get().strip()
             prenom = self.prenom.get().strip()
-            email = self.email.get().strip()
-            sexe = self.Sexe.get().strip()
+            email = self.email.get().strip().lower()
             dateNaissance = self.dateNaissance.get().strip()
+            Niv_scolaire = self.Niv_Scolaire.get().strip()
+            TypeBac = self.TypeBAC.get().strip()
+            year_bac = self.Bac.get().strip()
+            filiere = self.Filiere.get().strip()
+            sexe = self.Sexe.get().strip()
 
-            valide_nom = self.validate_nom_prenom(nom, "nom")
-            valide_prenom = self.validate_nom_prenom(prenom, "prénom")
-            valide_email = self.validate_email(email)
-            valide_date = self.validate_date_naissance(dateNaissance)
-            valide_sexe = self.validate_sexe(sexe)
-            valide_bac = self.validate_bac_year(self.Bac.get().strip())
-            valide_dropdown = self.validate_dropdowns()
+            valide_nom = self.Validation_class.validate_nom_prenom(nom, "nom")
+            valide_prenom = self.Validation_class.validate_nom_prenom(prenom, "prénom")
+            valide_email = self.Validation_class.validate_email(email)
+            valide_password = NEW_ACC_KEY
+            valide_date_Naissance = self.Validation_class.validate_date_naissance(dateNaissance)
+            valide_Niv_scolaire = self.Validation_class.validate_niveau_scolaire(Niv_scolaire)
+            valide_TypeBac = self.Validation_class.validate_Typebac(TypeBac)
+            valide_year_bac = self.Validation_class.validate_bac_year(year_bac) if valide_Niv_scolaire == "Baccalauréat" else "Null"
+            valide_filiere = self.Validation_class.validate_filiere(filiere)
+            valide_sexe = self.Validation_class.validate_sexe(sexe)
+            
 
-            all_valide = [valide_email, valide_nom, valide_prenom, valide_sexe, valide_date, valide_dropdown, valide_bac]
+            all_valide = [valide_nom, valide_prenom, valide_email, valide_password,
+                          valide_date_Naissance, valide_Niv_scolaire, valide_TypeBac,
+                          valide_year_bac,valide_sexe,valide_filiere
+                          ]
 
             if all(all_valide):
+                self.EtudiantManager.supprimer_email_non_valide(email)
                 if self.EtudiantManager.email_existe(email):
                     messagebox.showwarning("Adresse e-mail déjà utilisée",
-                        "Cette adresse e-mail est déjà utilisée par un autre compte. Veuillez saisir une autre adresse e-mail, s’il vous plaît.")
+                        "Cette adresse e-mail est déjà utilisée par un autre compte. Veuillez saisir une autre adresse e-mail, s'il vous plaît.")
                     return
                 else:
                     messagebox.showinfo("Succès", "Inscription enregistrée. Veuillez vérifier votre email.")
+                    self.EtudiantManager.inscrire_etudiant(
+                        valide_nom, valide_prenom, valide_email, valide_password,
+                        valide_date_Naissance, valide_Niv_scolaire, valide_TypeBac, valide_year_bac,
+                        valide_filiere, valide_sexe
+                    )
                     self.sendEmailCode(email)
                     self.change_to_otp(email)
         except Exception as e:
-            print(f"Erreur: {e}")  # pour debug si besoin
+            print(f"Erreur: {e}")  
             messagebox.showerror("Erreur système", f"Une erreur inattendue s'est produite: {str(e)}")
 
     
@@ -318,7 +329,7 @@ class CreatAccount(CreatFrame):
         email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email_receiver
 
-        Subject = "Votre Code de Vérification - DD-NOTE-OFPPT"
+        Subject = "Votre Code de Vérification - DD-NOTE"
         em = EmailMessage()
         em['From'] = email_sender
         em['To'] = email_receiver

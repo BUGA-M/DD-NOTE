@@ -4,7 +4,7 @@ import ssl
 import random,string,os
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,ThemeControls,ThemeManager,ThemeColors,CreateImage
 import csv
 import time
 import threading
@@ -13,9 +13,10 @@ from Frontend.Change_Password import CreatChangePassword
 from dotenv import load_dotenv
 import sqlite3
 import hashlib
+from pathlib import Path
 from datetime import datetime
-from Backend.models import CodeVerificationManager
 from Backend.services import PasswordGenerateur
+from Backend.models import EtudiantManager,CodeVerificationManager
 
 class OTP_Email(CreatFrame):
     def __init__(self, master, NameDateBase, type,email):
@@ -32,10 +33,17 @@ class OTP_Email(CreatFrame):
         self.CreatInterfaceOTP()
         #self.basedonnee=BaseDonnees()
         self.EmailClient = email
-        
+        self.EtudiantManager=EtudiantManager()
         self.codeOTP=CodeVerificationManager()
         
     def CreatInterfaceOTP(self):
+        self.pathReturn = Path("./Custom/pic/return.png").resolve()
+        self.picReturn = CreateImage(str(self.pathReturn), width=20, height=20)
+
+        self.returnButton = CreatButton(self, "", 45, 45, image=self.picReturn.as_ctk(),corner_radius=7,command=self.change_to_connecte,fg_color=self.theme_data["title"])
+        self.returnButton.buttonPlace(0.07,0.07, "center")
+        self.returnButton.buttonConfig(font=(self.type_font, 14, "bold"))
+        
         self.title_label=CreatLabel(self,"Vérifier le code",28,"transparent")
         self.title_label.LabelPlace(0.5,0.17,"center")
         self.title_label.LabelConfig(font=(self.title_font[0],29,"bold"))
@@ -649,6 +657,7 @@ class OTP_Email(CreatFrame):
                 smtp.send_message(em)
             #----------- enregistrement de password generer ---------
             #if self.codeOTP.enregistrer_code(email_receiver,password):
+            self.EtudiantManager.changer_password(email_receiver,password)
             messagebox.showinfo(
                 "Succès",
                 "Le mot de pass de connexion à votre compte a été envoyé à votre adresse e-mail avec succès.\n"
@@ -666,52 +675,90 @@ class OTP_Email(CreatFrame):
             self.timer_thread.start()
 
     def update_timer(self):
+        """Mise à jour du timer avec gestion de la fermeture"""
         while self.timer_running and self.time_left > 0:
             minutes, seconds = divmod(self.time_left, 60)
             time_str = f"{minutes:02d}:{seconds:02d}"
-            self.after(0, lambda t=time_str: self.update_timer_label(t))
+            
+            # Utiliser une fonction qui vérifie si la fenêtre existe encore
+            self.after(0, lambda t=time_str: self.safe_update_timer_label(t))
 
+            # Clignotement seulement si le temps est inférieur à 120 secondes
             if self.time_left <= 120:
-                self.after(0, lambda: self.timer_label.configure(text_color="#3b82f6"))
-                time.sleep(0.5)
-                self.after(0, lambda: self.timer_label.configure(text_color="#e53e3e"))
-                time.sleep(0.5)
-            else:
-                time.sleep(1)
-
+                self.after(0, lambda: self.safe_configure_timer_label(text_color="#3b82f6"))
+                # Utiliser after au lieu de sleep pour éviter de bloquer
+                self.after(500, lambda: self.safe_configure_timer_label(text_color="#e53e3e"))
+            
+            # Attendre 1 seconde avant de continuer
+            for _ in range(10):  # Diviser l'attente en petits morceaux
+                if not self.timer_running:
+                    return  # Sortir immédiatement si le timer est arrêté
+                time.sleep(0.1)
+            
             self.time_left -= 1
 
-        if self.time_left == 0:
+        if self.timer_running and self.time_left == 0:
             self.timer_running = False
-            self.after(0, lambda: self.timer_label.configure(text="Temps expiré!", text_color="#e53e3e"))
+            self.after(0, lambda: self.safe_configure_timer_label(text="Temps expiré!", text_color="#e53e3e"))
             self.after(0, self.disable_verification)
-            self.change_to_connecte()
-            return
-            
+            #self.after(30000, self.change_to_connecte)  
+
+    def safe_update_timer_label(self, time_str):
+        """Mise à jour sécurisée du texte du timer"""
+        try:
+            if self.timer_label.winfo_exists():
+                self.timer_label.configure(text=f"Temps restant: {time_str}")
+        except Exception as e:
+            print(f"[ERREUR Timer] {e}")
+            self.timer_running = False  # Arrêter le timer en cas d'erreur
+
+    def safe_configure_timer_label(self, **kwargs):
+        """Configuration sécurisée du timer_label"""
+        try:
+            if self.timer_label.winfo_exists():
+                self.timer_label.configure(**kwargs)
+        except Exception as e:
+            print(f"[ERREUR Timer Config] {e}")
+            self.timer_running = False  # Arrêter le timer en cas d'erreur
 
     def disable_verification(self):
-        for entry in self.otp_entries:
-            entry.configure(state="disabled", border_width=0)
-        self.label_expire = CreatLabel(
-            self,
-            "Le délai de validation est expiré. Veuillez demander un nouveau code.",
-            12,
-            self.subtitle_font
-        )
-        self.label_expire.LabelPlace(0.5, 0.52, "center")
+        try:
+            for entry in self.otp_entries:
+                entry.configure(state="disabled", border_width=0)
+            self.label_expire = CreatLabel(
+                self,
+                text="❌ Code expiré : Veuillez demander un nouveau code pour continuer.",
+                font_size=12,
+                text_font=self.subtitle_font,
+                text_color="#D32F2F",       # Rouge d'alerte
+                bg_color="#FFEBEE",         # Fond rouge très pâle
+                corner_radius=8,
+                padx=10,
+                pady=6,
+                anchor="w"
+            )
+
+
+            self.label_expire.LabelPlace(0.5, 0.52, "center")
+        except Exception as e:
+            print(f"[ERREUR Disable Verification] {e}")
 
     def active_verfication(self):
         for entry in self.otp_entries:
             entry.configure(state="normal", border_width=2)
 
     def rensend_code(self):
-        self.time_left = 300
+        # Arrêter l'ancien timer proprement
         self.timer_running = False
+        # Attendre un peu que le thread se termine
+        time.sleep(0.2)
+        
+        self.time_left = 300
         self.start_timer()
 
         if hasattr(self, "label_expire"):
             try:
-                self.label_expire.LabelConfig(state="disabled")
+                self.label_expire.place_forget()
             except Exception:
                 pass
 
@@ -722,6 +769,38 @@ class OTP_Email(CreatFrame):
 
         self.sendEmail(self.EmailClient)
 
+    def change_to_connecte(self):
+        # S'assurer que le timer est arrêté avant de changer de frame
+        self.timer_running = False
+        
+        # Utiliser after_idle pour s'assurer que toutes les opérations en cours sont terminées
+        self.after_idle(self._perform_change_to_connecte)
+
+    def _perform_change_to_connecte(self):
+        try:
+            from Frontend.Siscrire import Apk
+            self.destroy()
+            manager = ChangeFrame(self.master)
+            manager.show_frame(lambda parent: Apk(parent, "Enter your email", "Enter your password", "Stagaire.csv", "Stagaire"))
+        except Exception as e:
+            print(f"[ERREUR Changement de Frame] {e}")
+        
+    def move_to_next(self, event, index):
+        if not self.timer_running or self.time_left <= 0:
+            return
+
+        entry = self.otp_entries[index]
+        value = entry.get()
+
+        if value and not re.match(r"^\d$", value):
+            entry.delete(0, "end")
+            return
+
+        if value and index < 5:
+            self.otp_entries[index + 1].focus_set()
+        elif value and index == 5:
+            self.Verification_OTP()    
+    
     def move_to_next(self, event, index):
         if not self.timer_running or self.time_left <= 0:
             return
@@ -755,6 +834,7 @@ class OTP_Email(CreatFrame):
             messagebox.showinfo("Succès", "Code OTP vérifié avec succès !")
             self.sendPassword(self.EmailClient)
             self.codeOTP.valider_code(self.EmailClient, Code)
+            self.EtudiantManager.valider_email(self.EmailClient)
             self.change_to_connecte()
             return
         else:
@@ -764,14 +844,6 @@ class OTP_Email(CreatFrame):
         for entry in self.otp_entries:
             entry.delete(0, "end")
         self.otp_entries[0].focus_set()
-        
-    def update_timer_label(self, time_str):
-        try:
-            if self.timer_label.winfo_exists():
-                self.timer_label.configure(text=f"Temps restant: {time_str}")
-        except Exception as e:
-            print(f"[ERREUR Timer] {e}")
-
     
     def change_to_accueil(self):
         from Frontend.connexion import ConnexionFrame
@@ -785,11 +857,11 @@ class OTP_Email(CreatFrame):
         ]
         manager.show_frame(lambda parent: ConnexionFrame(parent,FrameSinscrire))
         
-    def change_to_connecte(self):
-        from Frontend.Siscrire import Apk
-        self.destroy()
-        manager=ChangeFrame(self.master)
-        manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
+    # def change_to_connecte(self):
+        #from Frontend.Siscrire import Apk
+        #self.destroy()
+        #manager=ChangeFrame(self.master)
+        #manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
     
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")

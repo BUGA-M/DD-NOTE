@@ -16,7 +16,7 @@
 
 ## 📋 À propos
 
-**DD-NOTE-OFPPT** est une application de gestion académique de nouvelle génération, conçue spécifiquement pour les établissements ISTA. Développée en Python avec une interface graphique moderne, elle intègre un système de sécurité avancé incluant une vérification par code OTP et un chiffrement des données sensibles.
+**DD-NOTE** est une application de gestion académique de nouvelle génération, conçue spécifiquement pour les établissements ISTA. Développée en Python avec une interface graphique moderne, elle intègre un système de sécurité avancé incluant une vérification par code OTP et un chiffrement des données sensibles.
 
 <div align="center">
 <table>
@@ -161,7 +161,7 @@ DD-NOTE/
 
 ## 🛡️ Sécurité
 
-DD-NOTE-OFPPT implémente plusieurs couches de sécurité :
+DD-NOTE implémente plusieurs couches de sécurité :
 
 - **Chiffrement Fernet** pour les mots de passe et données sensibles
 - **Authentification multi-facteurs** via codes OTP envoyés par email
