@@ -112,7 +112,7 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 DB_PATH = os.path.join(DATA_DIR, 'dd_note.db')
 
-NEW_ACC_KEY = "Password123@"
+NEW_ACC_KEY = "Exemple_passw0rd"
 ```
 
 Pour générer une clé Fernet sécurisée :
