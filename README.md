@@ -111,12 +111,21 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 DB_PATH = os.path.join(DATA_DIR, 'dd_note.db')
+
+NEW_ACC_KEY = "Password123@"
 ```
 
 Pour générer une clé Fernet sécurisée :
 ```python
+# generate_fernet_key.py
 from cryptography.fernet import Fernet
-print(Fernet.generate_key())
+
+def generate_key():
+    return Fernet.generate_key()
+
+if __name__ == "__main__":
+    key = generate_key()
+    print(f"Votre clé Fernet (à copier dans config.py) :\n{key.decode()}")
 ```
 </details>
 
