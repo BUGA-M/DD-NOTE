@@ -4,8 +4,8 @@ import ssl
 import random
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
-from Frontend.OTP import OTP
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
+#from Frontend import Create_OTP
 from Frontend.connexion import ConnexionFrame
 import csv
 from pathlib import Path
@@ -14,14 +14,14 @@ import sqlite3
 import os
 import hashlib
 from datetime import datetime
-
+from Backend.models import EtudiantManager,CodeVerificationManager,Validation
 
 class ForgetPassword(CreatFrame):
-    def __init__(self,master,NameDateBase,type):
+    def __init__(self,master,NameDateBase,Type):
         self.theme_name = ThemeManager.load_theme_preference()["color_theme"]
         self.theme_data = ThemeColors.load_colors(self.theme_name)
         super().__init__(master,450,450,"transparent",self.theme_data["button"],20)
-        self.type=type
+        self.type=Type
         self.datebase=NameDateBase
         self.title_font = FontInstaller.get_font("Titan One")
         self.subtitle_font = FontInstaller.get_font("Poppins")
@@ -29,7 +29,10 @@ class ForgetPassword(CreatFrame):
         self.time_left=300
         self.timer_running=False
         self.creatforget()
-        self.basedonne=BaseDonnees()
+        self.Validation_class = Validation()
+        self.EtudiantManager=EtudiantManager()
+        self.codeOTP=CodeVerificationManager()
+        #self.basedonne=BaseDonnees()
    
     def creatforget(self):
         self.pathReturn=Path("./Custom/pic/return.png").resolve()
@@ -54,7 +57,7 @@ class ForgetPassword(CreatFrame):
         self.EntryEmail.EntryConfig(placeholder_text="Exemple@email.com",font=(self.type_font, 13),corner_radius=7)
         self.EntryEmail.EntryPlace(0.5,0.46,"center")
 
-        self.buttonConnect=CreatButton(self,"Send",350,35,lambda : self.checkEmail())
+        self.buttonConnect=CreatButton(self,"Send",350,35,lambda : self.checkEmail(self.type))
         self.buttonConnect.buttonPlace(0.5,0.63,"center")
         self.buttonConnect.buttonConfig(font=(self.type_font,14,"bold"),fg_color=self.theme_data["title"])
 
@@ -116,61 +119,53 @@ class ForgetPassword(CreatFrame):
             manager.show_frame(lambda parent:Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
         elif self.type=="Formateur":
             manager.show_frame(lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","Formateur"))
-    def change_to_otp(self):
+    
+    def change_to_otp(self,Email):
+        from Frontend import Create_OTP
         self.destroy()
         manager=ChangeFrame(self.master)
-        manager.show_frame(lambda parent: OTP(parent, "test.csv", "proof"))
+        manager.show_frame(lambda parent: Create_OTP(parent, "test.csv", self.type,Email))
 
-    def checkEmail(self):
-        Email=self.EntryEmail.get().strip()
-        if not Email:
-            messagebox.showerror("Erreur", "Veuillez entrer une adresse email")
+    def checkEmail(self,User_Type):
+        Email=self.EntryEmail.get()
+        valide_email = self.Validation_class.validate_email(Email)
+        
+        if valide_email and User_Type.lower() == "stagaire" :
+            if self.EtudiantManager.email_existe(valide_email):
+                self.sendEmail(valide_email)
+                self.after(10, self.change_to_otp(valide_email))
+            else:
+                messagebox.showwarning("Adresse e-mail Introuvable",
+                "Veuillez saisir une autre adresse e-mail,associe a un compte,ou Inscriez vous")    
+        if valide_email and User_Type.lower() == "Formateur":
+            print("base donner formateur pas encore cree")
+        if valide_email and User_Type.lower() == "admin":
+            print("base donner Admin pas encore cree")
+        else:
             return
-        if '@' not in Email:
-            messagebox.showerror("Erreur", "Veuillez entrer une adresse email valide")
-            return
-        found=False
-        if self.basedonne.email_existe(Email):
-            found=True
-            with open("ForgetPss.csv","w",newline="",encoding="utf-8") as f:
-                write=csv.writer(f,delimiter=";")
-                write.writerow([Email])
-            self.sendEmail(Email)
-            
-        if not found:
-            messagebox.showerror("Erreur","Adresse e-mail non trouvée dans la base de données.")
-            return
-        self.after(10, self.change_to_otp) 
-    
     def sendEmail(self, Email_receiver):
-        import smtplib
-        from email.message import EmailMessage
-        import ssl
-        import random
-        import csv
-
         load_dotenv()
-        email_sendaire = str(os.getenv("EMAIL_SENDER"))
+        email_sender = str(os.getenv("EMAIL_SENDER"))
         email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email_receiver
 
-        Subject="Votre Code de Vérification - DD-NOTE-OFPPT"
+        Subject = "Vérification OTP de l'adresse e-mail - DD-NOTE"
         em = EmailMessage()
-        em['From'] = email_sendaire
+        em['From'] = email_sender
         em['To'] = email_receiver
         em['Subject'] = Subject
 
         context = ssl.create_default_context()
         code = str(random.randint(100000, 999999))
 
-        # Corps de l’email version HTML avec style pro
+        # Corps de l'email version HTML avec style pro
         html_content = f"""\
             <!DOCTYPE html>
             <html lang="fr">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Réinitialisation de mot de passe</title>
+                <title>Vérification de l'adresse e-mail via un code OTP</title>
                 <!--[if mso]>
                 <style type="text/css">
                     table, td {{font-family: Arial, Helvetica, sans-serif;}}
@@ -209,7 +204,7 @@ class ForgetPassword(CreatFrame):
                                             </tr>
                                             <tr>
                                                 <td align="center">
-                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Réinitialisation de mot de passe</h1>
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Vérification de l'adresse e-mail via un code OTP</h1>
                                                 </td>
                                             </tr>
                                         </table>
@@ -223,7 +218,9 @@ class ForgetPassword(CreatFrame):
                                             <tr>
                                                 <td>
                                                     <p style="font-size: 18px; font-weight: 500; margin: 0 0 20px 0;">Bonjour,</p>
-                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte DD-NOTE-OFPPT. Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous.</p>
+                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">
+                                                        Nous avons reçu une demande de création de compte pour votre adresse e-mail sur DD-NOTE.Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous
+                                                    </p>
                                                 </td>
                                             </tr>
                                             
@@ -275,7 +272,7 @@ class ForgetPassword(CreatFrame):
                                                             <td style="padding: 25px;">
                                                                 <h3 style="margin-top: 0; color: {self.theme_data['title']}; font-size: 18px; font-weight: 600; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid {self.theme_data['title']}; display: inline-block;">Support technique</h3>
                                                                 <p style="font-size: 15px; line-height: 24px; margin: 0;">
-                                                                    📧 support@ddnote-ofppt.ma<br>
+                                                                    📧 ddnote.ma@gmail.com<br>
                                                                     📞 +212 6 66 66 66 66<br>
                                                                     🏢 OFPPT - Dévelopement Digital
                                                                 </p>
@@ -363,7 +360,7 @@ class ForgetPassword(CreatFrame):
                                             <!-- Copyright -->
                                             <tr>
                                                 <td align="center">
-                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE-OFPPT. Tous droits réservés.</p>
+                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE. Tous droits réservés.</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -377,19 +374,39 @@ class ForgetPassword(CreatFrame):
             </html>
         """
 
-        em.set_content("Votre code de vérification est : " + code)
-        em.add_alternative(html_content, subtype="html")
+        # Version texte simple pour les clients email qui ne supportent pas HTML
+        text_content = f"""\
+        Réinitialisation de mot de passe DD-NOTE
+
+        Bonjour,
+
+        Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.
+        Votre code de vérification est : {code}
+        Ce code est valable pendant 5 minutes.
+
+        Ne partagez jamais ce code avec qui que ce soit.
+
+        Cordialement,
+        L'équipe DD-NOTE
+        """
+
+        # Ajouter les deux versions au message
+        em.set_content(text_content)
+        em.add_alternative(html_content, subtype='html')
+
         try:
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-                smtp.login(email_sendaire, email_password)
+                smtp.login(email_sender, email_password)
                 smtp.send_message(em)
-
-            if self.basedonne.enregistrer_code_verification(Email_receiver,code):
-                messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            if self.codeOTP.enregistrer_code(email_receiver, code,"Récupération"):
+                messagebox.showinfo(
+                    "Succès",
+                    "✅ Le code de vérification a été envoyé à votre adresse e-mail avec succès.\n\n"
+                    "🚨 Si vous ne voyez pas l'e-mail dans votre boîte de réception, veuillez vérifier votre dossier de courriers indésirables (spam)."
+                )
         except Exception as e:
-            messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {e}")
-
-                
+            messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}")
+                        
     def on_forget_enter(self, event):
         self.buttonAccountCreat.buttonConfig(text_color=self.theme_data["text"])
 

@@ -141,7 +141,7 @@ class OTP_Email(CreatFrame):
         email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email_receiver
 
-        Subject = "Votre Code de Vérification - DD-NOTE-OFPPT"
+        Subject = "Vérification OTP de l'adresse e-mail - DD-NOTE"
         em = EmailMessage()
         em['From'] = email_sender
         em['To'] = email_receiver
@@ -406,7 +406,7 @@ class OTP_Email(CreatFrame):
         email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email
 
-        Subject = "Validation de votre adresse e-mail et informations de connexion"
+        Subject = "Le mot de pass de connexion à votre compte - DD-NOTE"
         em = EmailMessage()
         em['From'] = email_sender
         em['To'] = email_receiver
@@ -424,7 +424,7 @@ class OTP_Email(CreatFrame):
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Réinitialisation de mot de passe</title>
+                <title>Le mot de pass de connexion à votre compte</title>
                 <!--[if mso]>
                 <style type="text/css">
                     table, td {{font-family: Arial, Helvetica, sans-serif;}}
@@ -801,22 +801,6 @@ class OTP_Email(CreatFrame):
         elif value and index == 5:
             self.Verification_OTP()    
     
-    def move_to_next(self, event, index):
-        if not self.timer_running or self.time_left <= 0:
-            return
-
-        entry = self.otp_entries[index]
-        value = entry.get()
-
-        if value and not re.match(r"^\d$", value):
-            entry.delete(0, "end")
-            return
-
-        if value and index < 5:
-            self.otp_entries[index + 1].focus_set()
-        elif value and index == 5:
-            self.Verification_OTP()
-
     def Verification_OTP(self):
         Code = self.codeOTP.get_code(self.EmailClient)
         otp_code = ''.join([entry.get() for entry in self.otp_entries])

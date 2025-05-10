@@ -8,14 +8,12 @@ class CodeVerificationManager:
         if not self.db.connecter():
             return False
         try:
-            # Supprimer les anciens codes non vérifiés du même type pour cet email
             delete_old = """
             DELETE FROM code_verification
             WHERE email = ? AND type = ? AND verifie = 0;
             """
             self.db.executer(delete_old, (email, type_code))
 
-            # Insérer un nouveau code
             requete = """
             INSERT INTO code_verification (email, code, type, expire_at, date_envoi)
             VALUES (?, ?, ?, DATETIME('now', '+' || ? || ' minutes'), DATETIME('now'));
@@ -85,10 +83,12 @@ class CodeVerificationManager:
         if not self.db.connecter():
             return False
         try:
-            # Vérifie le nombre de tentatives actuelles
+            # Récupère la tentative du code le plus récent
             requete_check = """
             SELECT tentative FROM code_verification
-            WHERE email = ? AND type = ?;
+            WHERE email = ? AND type = ?
+            ORDER BY date_envoi DESC
+            LIMIT 1;
             """
             cursor = self.db.executer(requete_check, (email, type_code))
             result = cursor.fetchone()
@@ -99,31 +99,40 @@ class CodeVerificationManager:
             tentative = result[0]
 
             if tentative >= 4:
-                # Si on est à la 5e tentative, on incrémente et expire le code
+                # Expire le code le plus récent
                 requete_expire = """
                 UPDATE code_verification
                 SET tentative = tentative + 1,
-                    expire_at = DATETIME('now') -- Expiration immédiate
-                WHERE email = ? AND type = ?;
+                    expire_at = DATETIME('now')
+                WHERE email = ? AND type = ?
+                AND date_envoi = (
+                    SELECT MAX(date_envoi) FROM code_verification
+                    WHERE email = ? AND type = ?
+                );
                 """
-                self.db.executer(requete_expire, (email, type_code))
+                self.db.executer(requete_expire, (email, type_code, email, type_code))
+                self.db.commit()
                 return 'destroy'
             else:
-                # Sinon, on incrémente simplement
+                # Incrémente simplement la tentative du code le plus récent
                 requete_increment = """
                 UPDATE code_verification
                 SET tentative = tentative + 1
-                WHERE email = ? AND type = ?;
+                WHERE email = ? AND type = ?
+                AND date_envoi = (
+                    SELECT MAX(date_envoi) FROM code_verification
+                    WHERE email = ? AND type = ?
+                );
                 """
-                self.db.executer(requete_increment, (email, type_code))
-
-            self.db.commit()
-            return True
+                self.db.executer(requete_increment, (email, type_code, email, type_code))
+                self.db.commit()
+                return True
         except Exception as e:
             print(f"[ERREUR] Incrément tentative : {e}")
             return False
         finally:
             self.db.deconnecter()
+
 
 
     def nettoyer_codes_expirés(self):

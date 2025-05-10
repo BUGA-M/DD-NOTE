@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from tkinter import messagebox
+from Backend.exceptions import MDPVideException,MDPCourtException,MajException,MinException,NumberException, CaractereException, MDPdiffException
 
 class Validation:
     @staticmethod
@@ -275,32 +276,33 @@ class Validation:
         Valide un mot de passe
         Retourne le mot de passe si valide, sinon None
         """
-        if not password:
-            messagebox.showerror('Erreur', "Le mot de passe est obligatoire.")
-            return None
-            
-        if len(password) < 8:
-            messagebox.showerror('Erreur', "Le mot de passe doit contenir au moins 8 caractères.")
-            return None
-            
-        if not re.search(r'[A-Z]', password):
-            messagebox.showerror('Erreur', "Le mot de passe doit contenir au moins une lettre majuscule.")
-            return None
-            
-        if not re.search(r'[a-z]', password):
-            messagebox.showerror('Erreur', "Le mot de passe doit contenir au moins une lettre minuscule.")
-            return None
-            
-        if not re.search(r'[0-9]', password):
-            messagebox.showerror('Erreur', "Le mot de passe doit contenir au moins un chiffre.")
-            return None
-            
-        if confirm_password is not None and password != confirm_password:
-            messagebox.showerror('Erreur', "Les mots de passe ne correspondent pas.")
-            return None
-            
-        return password
+        try:
+            if not password:
+                raise MDPVideException()
+                return None
+            if len(password) < 8:
+                raise MDPCourtException()
 
+            if not re.search(r'[A-Z]', password):
+                raise MajException()
+
+            if not re.search(r'[a-z]', password):
+                raise MinException()
+
+            if not re.search(r'[0-9]', password):
+                raise NumberException()
+
+            if not re.search(r'[!@#$%^&*()_\-+=\[\]{};:,.<>?/\\|`~]', password):
+                raise CaractereException()
+
+            if confirm_password is not None and password != confirm_password:
+                raise MDPdiffException()
+
+            return password
+        
+        except MDPException as e:
+            messagebox.showerror("Erreur", str(e))
+            return None
     @staticmethod
     def validate_moyenne_bac(moyenne_str):
         """

@@ -290,24 +290,36 @@ class EtudiantManager:
             self.db.deconnecter()
 
     def changer_password(self, email, nouveau_password):
-        """Change le mot de passe d'un étudiant à partir de son email"""
+        """Change le mot de passe d'un étudiant à partir de son email, seulement s'il est différent de l'ancien"""
         if not self.db.connecter():
             return False
         try:
-            password_chiffre = Crypto.encrypt(nouveau_password)
-            requete = """
+            
+            requete_select = "SELECT password FROM etudiant WHERE email = ?"
+            ancien_mdp_chiffre = self.db.fetchone(requete_select, (email.strip().lower(),))
+            
+            ancien_mdp_chiffre = ancien_mdp_chiffre[0]
+            ancien_mdp = Crypto.decrypt(ancien_mdp_chiffre)
+
+            if ancien_mdp == nouveau_password:
+                return False
+            
+            nouveau_mdp_chiffre = Crypto.encrypt(nouveau_password)
+            requete_update = """
                 UPDATE etudiant
                 SET password = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE email = ?
             """
-            self.db.executer(requete, (password_chiffre, email.strip().lower()))
+            self.db.executer(requete_update, (nouveau_mdp_chiffre, email.strip().lower()))
             self.db.commit()
             return True
+
         except Exception as e:
             print(f"[ERREUR] Changement de mot de passe étudiant : {e}")
             return False
         finally:
             self.db.deconnecter()
+
 
     def supprimer_etudiant(self, etudiant_id):
         """Supprime un étudiant de la base de données"""

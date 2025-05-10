@@ -9,7 +9,7 @@ import ssl
 from pathlib import Path
 from datetime import datetime
 from Frontend.ForgetPassword import ForgetPassword
-from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, CreatOptionMenu, FontInstaller, ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
+from Custom import CreatLabel, CreatEntry, CreatButton, CreatFrame, CreatComboBox, CreatOptionMenu, FontInstaller, ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
 from Frontend.Siscrire import Apk
 from dotenv import load_dotenv
 import sqlite3
@@ -246,10 +246,10 @@ class CreatAccount(CreatFrame):
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")
     
-    def change_to_connecte(self):
-        self.destroy()
-        manager=ChangeFrame(self.master)
-        manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
+    #def change_to_connecte(self):
+    #    self.destroy()
+    #    manager=ChangeFrame(self.master)
+    #   manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
 
     def change_to_connecte(self):
         from Frontend.Siscrire import Apk
@@ -321,7 +321,7 @@ class CreatAccount(CreatFrame):
         from Frontend.OTP_Email import OTP_Email
         self.destroy()
         manager = ChangeFrame(self.master)
-        manager.show_frame(lambda parent: OTP_Email(parent, "test.csv", "proof",email))
+        manager.show_frame(lambda parent: OTP_Email(parent, "Stagaire.csv", "Stagaire",email))
 
     def sendEmailCode(self, Email_receiver):
         load_dotenv()
@@ -329,7 +329,7 @@ class CreatAccount(CreatFrame):
         email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email_receiver
 
-        Subject = "Votre Code de Vérification - DD-NOTE"
+        Subject = "Vérification OTP de l'adresse e-mail - DD-NOTE"
         em = EmailMessage()
         em['From'] = email_sender
         em['To'] = email_receiver
@@ -344,7 +344,7 @@ class CreatAccount(CreatFrame):
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Vérification de l'adresse e-mail via un code OTP</title>
+                <title>Vérification OTP de l'adresse e-mail - DD-NOTE</title>
                 <!--[if mso]>
                 <style type="text/css">
                     table, td {{font-family: Arial, Helvetica, sans-serif;}}

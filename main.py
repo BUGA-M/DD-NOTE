@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from Frontend import ConnexionFrame,Apk
-from Custom import FontInstaller,CreatFrame,CreatLabel,CreatButton,ThemeControls,ThemeManager,ThemeColors,ChangeFrame,DataBase
+from Custom import FontInstaller,CreatFrame,CreatLabel,CreatButton,ThemeControls,ThemeManager,ThemeColors,ChangeFrame
 from Backend.db.init import DatabaseInitializer
 from PIL import Image
 import json

@@ -4,18 +4,19 @@ import ssl
 import random
 import customtkinter as ctk
 from tkinter import messagebox
-from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors,BaseDonnees
+from Custom import CreatLabel,CreatEntry,CreatButton,CreatFrame,CreatComboBox,FontInstaller,ChangeFrame,CreateImage,ThemeControls,ThemeManager,ThemeColors
 import csv
 import time
 import threading
 import re
-from Frontend.Change_Password import CreatChangePassword
+#from Frontend.Change_Password import CreatChangePassword
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from Backend.models import EtudiantManager,CodeVerificationManager
 
-class OTP(CreatFrame):
-    def __init__(self, master, NameDateBase, type):
+class Create_OTP(CreatFrame):
+    def __init__(self, master, NameDateBase, type,email):
         self.theme_name = ThemeManager.load_theme_preference()["color_theme"]
         self.theme_data = ThemeColors.load_colors(self.theme_name)
         super().__init__(master, 450, 450, "transparent", self.theme_data["button"], 20)
@@ -26,7 +27,9 @@ class OTP(CreatFrame):
         self.type_font = FontInstaller.get_font("Orbitron")
         self.time_left = 300
         self.timer_running = False
-        self.basedonnee=BaseDonnees()
+        #self.basedonnee=BaseDonnees()
+        self.EmailClient = email
+        self.codeOTP=CodeVerificationManager()
         self.CreatInterfaceOTP()
     def CreatInterfaceOTP(self):
         #,self.title_font[0],"#3b82f6"
@@ -141,16 +144,16 @@ class OTP(CreatFrame):
         email_password = str(os.getenv("EMAIL_PASSWORD"))
         email_receiver = Email_receiver
 
-        Subject = "Votre Code de Vérification - DD-NOTE-OFPPT"
+        Subject = "Réinitialisation de mot de passe"
         em = EmailMessage()
         em['From'] = email_sender
         em['To'] = email_receiver
         em['Subject'] = Subject
-
         context = ssl.create_default_context()
+        
         code = str(random.randint(100000, 999999))
 
-         # Corps de l’email version HTML avec style pro
+        # Corps de l'email version HTML avec style pro
         html_content = f"""\
             <!DOCTYPE html>
             <html lang="fr">
@@ -196,7 +199,7 @@ class OTP(CreatFrame):
                                             </tr>
                                             <tr>
                                                 <td align="center">
-                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Réinitialisation de mot de passe</h1>
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">Vérification de l'adresse e-mail Pour un changement de mot de passe</h1>
                                                 </td>
                                             </tr>
                                         </table>
@@ -210,7 +213,9 @@ class OTP(CreatFrame):
                                             <tr>
                                                 <td>
                                                     <p style="font-size: 18px; font-weight: 500; margin: 0 0 20px 0;">Bonjour,</p>
-                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte DD-NOTE-OFPPT. Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous.</p>
+                                                    <p style="font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">
+                                                        Nous avons reçu une demande de changement de mot de passe pour votre adresse e-mail sur DD-NOTE.Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous.
+                                                    </p>
                                                 </td>
                                             </tr>
                                             
@@ -262,7 +267,7 @@ class OTP(CreatFrame):
                                                             <td style="padding: 25px;">
                                                                 <h3 style="margin-top: 0; color: {self.theme_data['title']}; font-size: 18px; font-weight: 600; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid {self.theme_data['title']}; display: inline-block;">Support technique</h3>
                                                                 <p style="font-size: 15px; line-height: 24px; margin: 0;">
-                                                                    📧 support@ddnote-ofppt.ma<br>
+                                                                    📧 ddnote.ma@gmail.com<br>
                                                                     📞 +212 6 66 66 66 66<br>
                                                                     🏢 OFPPT - Dévelopement Digital
                                                                 </p>
@@ -350,7 +355,7 @@ class OTP(CreatFrame):
                                             <!-- Copyright -->
                                             <tr>
                                                 <td align="center">
-                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE-OFPPT. Tous droits réservés.</p>
+                                                    <p style="margin: 0; color: white; font-size: 14px;">© 2025 DD-NOTE. Tous droits réservés.</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -366,18 +371,18 @@ class OTP(CreatFrame):
 
         # Version texte simple pour les clients email qui ne supportent pas HTML
         text_content = f"""\
-        Réinitialisation de mot de passe DD-NOTE-OFPPT
+        Réinitialisation de mot de passe DD-NOTE
 
         Bonjour,
 
-        Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.
+        Nous avons reçu une demande de changement de mot de passe pour votre adresse e-mail sur DD-NOTE.Pour assurer la sécurité de votre compte, veuillez utiliser le code de vérification ci-dessous
         Votre code de vérification est : {code}
         Ce code est valable pendant 5 minutes.
 
         Ne partagez jamais ce code avec qui que ce soit.
 
         Cordialement,
-        L'équipe DD-NOTE-OFPPT
+        L'équipe DD-NOTE
         """
 
         # Ajouter les deux versions au message
@@ -388,124 +393,199 @@ class OTP(CreatFrame):
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
                 smtp.login(email_sender, email_password)
                 smtp.send_message(em)
-
-            if self.basedonnee.modifier_code_verification(Email_receiver,code) :
-                with open("ForgetPss.csv", "w", newline='', encoding='utf-8') as ficher:
-                    writer = csv.writer(ficher, delimiter=";")
-                    writer.writerow([Email_receiver])
-                messagebox.showinfo("Succès", "Le code de vérification a été envoyé à votre adresse e-mail avec succès.")
+            if self.codeOTP.enregistrer_code(email_receiver, code,"Récupération"):
+                messagebox.showinfo(
+                    "Succès",
+                    "✅ Le code de vérification a été envoyé à votre adresse e-mail avec succès.\n\n"
+                    "🚨 Si vous ne voyez pas l'e-mail dans votre boîte de réception, veuillez vérifier votre dossier de courriers indésirables (spam)."
+                )
         except Exception as e:
-            messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}") 
+            messagebox.showerror("Erreur", f"Échec de l'envoi de l'e-mail : {str(e)}")
                
     def start_timer(self):
         if not self.timer_running:
-            self.timer_running=True
-            self.timer_thread=threading.Thread(target=self.update_timer)
-            self.timer_thread.daemon=True
+            self.timer_running = True
+            self.timer_thread = threading.Thread(target=self.update_timer)
+            self.timer_thread.daemon = True
             self.timer_thread.start()
-    
+
     def update_timer(self):
+        """Mise à jour du timer avec gestion de la fermeture"""
         while self.timer_running and self.time_left > 0:
-            minutes,seconds=divmod(self.time_left, 60)
+            minutes, seconds = divmod(self.time_left, 60)
             time_str = f"{minutes:02d}:{seconds:02d}"
+            
+            # Utiliser une fonction qui vérifie si la fenêtre existe encore
+            self.after(0, lambda t=time_str: self.safe_update_timer_label(t))
 
-            self.after(0,lambda t=time_str:self.timer_label.configure(text=f"Temps restant: {t}"))
+            # Clignotement seulement si le temps est inférieur à 120 secondes
+            if self.time_left <= 120:
+                self.after(0, lambda: self.safe_configure_timer_label(text_color="#3b82f6"))
+                # Utiliser after au lieu de sleep pour éviter de bloquer
+                self.after(500, lambda: self.safe_configure_timer_label(text_color="#e53e3e"))
+            
+            # Attendre 1 seconde avant de continuer
+            for _ in range(10):  # Diviser l'attente en petits morceaux
+                if not self.timer_running:
+                    return  # Sortir immédiatement si le timer est arrêté
+                time.sleep(0.1)
+            
+            self.time_left -= 1
 
-            if self.time_left <= 120: 
-                self.after(0,lambda:self.timer_label.configure(text_color="#3b82f6"))
-                time.sleep(1)
-                self.after(0,lambda:self.timer_label.configure(text_color="#e53e3e")) 
-            time.sleep(1)
-            self.time_left-=1
-        if self.time_left==0:
-            self.timer_running=False
-            self.timer_label.configure(text="Temps expiré!")
-            self.disable_verification()
-   
+        if self.timer_running and self.time_left == 0:
+            self.timer_running = False
+            self.after(0, lambda: self.safe_configure_timer_label(text="Temps expiré!", text_color="#e53e3e"))
+            self.after(0, self.disable_verification)
+            #self.after(30000, self.change_to_connecte)  
+
+    def safe_update_timer_label(self, time_str):
+        """Mise à jour sécurisée du texte du timer"""
+        try:
+            if self.timer_label.winfo_exists():
+                self.timer_label.configure(text=f"Temps restant: {time_str}")
+        except Exception as e:
+            print(f"[ERREUR Timer] {e}")
+            self.timer_running = False  # Arrêter le timer en cas d'erreur
+
+    def safe_configure_timer_label(self, **kwargs):
+        """Configuration sécurisée du timer_label"""
+        try:
+            if self.timer_label.winfo_exists():
+                self.timer_label.configure(**kwargs)
+        except Exception as e:
+            print(f"[ERREUR Timer Config] {e}")
+            self.timer_running = False  # Arrêter le timer en cas d'erreur
+
     def disable_verification(self):
-        for entry in self.otp_entries:
-            entry.configure(state="disabled",border_width=0)
-        self.label_expire=CreatLabel(
-            self,
-            "Le délai de validation est expiré. Veuillez demander un nouveau code.",
-            12,
-            self.subtitle_font)
-        self.label_expire.LabelPlace(0.5,0.52,"center")
-    
-    
+        try:
+            for entry in self.otp_entries:
+                entry.configure(state="disabled", border_width=0)
+            self.label_expire = CreatLabel(
+                self,
+                text="❌ Code expiré : Veuillez demander un nouveau code pour continuer.",
+                font_size=12,
+                text_font=self.subtitle_font,
+                text_color="#D32F2F",       # Rouge d'alerte
+                bg_color="#FFEBEE",         # Fond rouge très pâle
+                corner_radius=8,
+                padx=10,
+                pady=6,
+                anchor="w"
+            )
+
+
+            self.label_expire.LabelPlace(0.5, 0.52, "center")
+        except Exception as e:
+            print(f"[ERREUR Disable Verification] {e}")
+
     def active_verfication(self):
         for entry in self.otp_entries:
-            entry.configure(state="normal",border_width=2)
-    
+            entry.configure(state="normal", border_width=2)
+
     def rensend_code(self):
-        self.time_left=300
-        self.timer_running=False
+        # Arrêter l'ancien timer proprement
+        self.timer_running = False
+        # Attendre un peu que le thread se termine
+        time.sleep(0.2)
+        
+        self.time_left = 300
         self.start_timer()
-        try:
-            self.label_expire.LabelConfig(state="disabled")
-        except:
-            pass
+
+        if hasattr(self, "label_expire"):
+            try:
+                self.label_expire.place_forget()
+            except Exception:
+                pass
+
         self.active_verfication()
         for entry in self.otp_entries:
             entry.delete(0, "end")
         self.otp_entries[0].focus_set()
-        with open("ForgetPss.csv","r",newline='',encoding='utf-8') as ficher:
-            count=csv.reader(ficher,delimiter=';')
-            for i in count:
-                Email=i[0]
-        self.sendEmail(Email)
+
+        self.sendEmail(self.EmailClient)
+
+    def Go_to_changeMDP(self):
+        # S'assurer que le timer est arrêté avant de changer de frame
+        self.timer_running = False
+        
+        # Utiliser after_idle pour s'assurer que toutes les opérations en cours sont terminées
+        self.after_idle(self._perform_Go_to_changeMDP)
+
+    def _perform_Go_to_changeMDP(self):
         try:
-            self.label_expire.LabelConfig(state="disabled")
-        except:
-            pass
-            
-    def move_to_next(self,event,index):
+            from Frontend.Change_Password import CreatChangePassword
+            self.destroy()
+            manager=ChangeFrame(self.master)
+            manager.show_frame(lambda parent: CreatChangePassword(parent, "test.csv", self.type,self.EmailClient))
+        except Exception as e:
+            print(f"[ERREUR Changement de Frame] {e}")
+        
+    def move_to_next(self, event, index):
         if not self.timer_running or self.time_left <= 0:
             return
-            
-        entry=self.otp_entries[index]
-        value=entry.get()
-        if value and not re.match(r"^\d$",value):
-            entry.delete(0,"end")
+
+        entry = self.otp_entries[index]
+        value = entry.get()
+
+        if value and not re.match(r"^\d$", value):
+            entry.delete(0, "end")
             return
-        if value and index< 5:
-            self.otp_entries[index+1].focus_set()
+
+        if value and index < 5:
+            self.otp_entries[index + 1].focus_set()
         elif value and index == 5:
-            self.Verification_OTP()
+            self.Verification_OTP()    
     
     def Verification_OTP(self):
-        with open("ForgetPss.csv","r",newline='',encoding='utf-8') as ficher:
-            count=csv.reader(ficher,delimiter=';')
-            for i in count:
-                Email=i[0]
-        Code=self.basedonnee.obtenir_code_verification(Email)
-        otp_code=''.join([entry.get() for entry in self.otp_entries])
-        if len(otp_code)!=6:
-            messagebox.showerror("error","Veuillez saisir 6 chiffres")
-            for entry in self.otp_entries:
-                entry.delete(0,"end")
-            self.otp_entries[0].focus_set()
+        Code = self.codeOTP.get_code(self.EmailClient,"Récupération")
+        otp_code = ''.join([entry.get() for entry in self.otp_entries])
+
+        if self.codeOTP.incrementer_tentative(self.EmailClient,"Récupération") == 'destroy':
+            messagebox.showerror("🔒 Tentatives épuisées", 
+                "Vous avez atteint la limite de 5 tentatives.\n"
+                "Votre code de vérification a été désactivé.\n\n"
+                "⏳ Veuillez demander un nouveau code ou contacter le support.")
+            self.Go_to_connecte()
             return
-        if not otp_code.isdigit():
-            messagebox.showerror("error","Le code doit contenir uniquement des chiffres")
-            for entry in self.otp_entries:
-                entry.delete(0,"end")
-            self.otp_entries[0].focus_set()
+
+        if len(otp_code) != 6:
+            messagebox.showerror("Erreur", "Veuillez saisir 6 chiffres.")
+        elif not otp_code.isdigit():
+            messagebox.showerror("Erreur", "Le code doit contenir uniquement des chiffres.")
+        elif otp_code == Code:
+            self.timer_running = False
+            messagebox.showinfo("Succès", "Code OTP vérifié avec succès !")
+            #self.sendEmail(self.EmailClient)
+            self.codeOTP.valider_code(self.EmailClient, Code, "Récupération")
+            #self.EtudiantManager.valider_email(self.EmailClient)
+            self.Go_to_changeMDP()
             return
-        if otp_code==Code:
-            self.timer_running=False
-            messagebox.showinfo("Succès","Code OTP vérifié avec succès!")
-            self.basedonnee.supprimer_code_verification(Email)
-            self.change_to_chnagePass()
         else:
-            messagebox.showerror("error","Code OTP incorrect.")
-            for entry in self.otp_entries:
-                entry.delete(0, "end")
-            self.otp_entries[0].focus_set()
-            return
-    def change_to_chnagePass(self):
+            messagebox.showerror("Erreur", "Code OTP incorrect.")
+
+        # Réinitialisation du formulaire dans tous les cas d'erreur
+        for entry in self.otp_entries:
+            entry.delete(0, "end")
+        self.otp_entries[0].focus_set()
+        
+    def Go_to_connecte(self):
+        # S'assurer que le timer est arrêté avant de changer de frame
+        self.timer_running = False
+        
+        # Utiliser after_idle pour s'assurer que toutes les opérations en cours sont terminées
+        self.after_idle(self._perform_Go_to_connecte)
+        
+    def _perform_Go_to_connecte(self):
+        from Frontend.Siscrire import Apk
         self.destroy()
         manager=ChangeFrame(self.master)
-        manager.show_frame(lambda parent: CreatChangePassword(parent, "test.csv", "proof"))
+        if self.type == "admin" :
+            manager.show_frame(lambda parent:Apk(parent,"Enter your code","Enter your password","admin.csv","admin"))
+        if self.type == "Stagaire" :
+            manager.show_frame(lambda parent: Apk(parent,"Enter your email","Enter your password","Stagaire.csv","Stagaire"))
+        if self.type == "Formateur" :
+            manager.show_frame(lambda parent:Apk(parent,"Enter your CIN","Enter your password","Formateur.csv","Formateur"))
+    
     def show_Frame(self):
         self.FramePlace(relx=0.5,rely=0.5,anchor="center")
+        #self.after(3000, self.sendEmail(self.EmailClient))
