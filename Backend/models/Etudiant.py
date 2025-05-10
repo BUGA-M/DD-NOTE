@@ -381,3 +381,36 @@ class EtudiantManager:
             return cursor.fetchall() if cursor else []
         finally:
             self.db.deconnecter()
+    def get_email_password_etudiant(self, email):
+        """Récupère l'e-mail et le mot de passe déchiffré d'un étudiant via son e-mail validé"""
+
+        if not self.db.connecter():
+            return None
+
+        try:
+            requete = """
+                SELECT email, password FROM etudiant
+                WHERE email = ? AND email_valide = 1
+            """
+            cursor = self.db.executer(requete, (email.strip().lower(),))
+            result = cursor.fetchone()
+
+            if result:
+                email_retour, mot_de_passe_chiffre = result
+                try:
+                    mot_de_passe_clair = Crypto.decrypt(mot_de_passe_chiffre)
+                    return {
+                        "email": email_retour,
+                        "password": mot_de_passe_clair
+                    }
+                except Exception as decryption_error:
+                    print(f"[ERREUR] Déchiffrement du mot de passe : {decryption_error}")
+                    return None
+
+            return None
+        except Exception as e:
+            print(f"[ERREUR] Récupération email/mot de passe étudiant : {e}")
+            return None
+        finally:
+            self.db.deconnecter()
+
