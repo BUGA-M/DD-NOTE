@@ -43,12 +43,6 @@ class App(ctk.CTk):
         FontInstaller.installerFont("Poppins", "Custom/db_fonts/Poppins-Regular.ttf", 22)
         FontInstaller.installerFont("Orbitron", "Custom/db_fonts/static/Orbitron-Bold.ttf", 22)
 
-    def load_frames(self):
-        self.connexion_frame = ConnexionFrame(self,self.FrameSinscrire)
-        self.connexion_frame.showPack()
-        
-
-
     def recreate_app(self):
         self.quit()
         subprocess.Popen([sys.executable] + sys.argv)

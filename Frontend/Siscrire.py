@@ -142,6 +142,7 @@ class Apk(CreatFrame):
                 self.password.delete(0, "end")
                 messagebox.showinfo("Succès", "✅ Connexion stagiaire réussie !")
                 print("frame changer")
+                self.Go_to_mainFrame(info["email"])
                 return
             else:
                 return messagebox.showerror("Erreur", "❌ Identifiant ou mot de passe stagiaire incorrect.")
@@ -175,6 +176,12 @@ class Apk(CreatFrame):
         ]
         manager.show_frame(lambda parent: ConnexionFrame(parent,FrameSinscrire))
     
+    def Go_to_mainFrame(self,keyClient):
+        from Frontend.mainFrame import CreateInterfaceGenerale
+        self.destroy()
+        manager=ChangeFrame(self.master)
+        manager.show_frame(lambda parent: CreateInterfaceGenerale(parent,self.type,keyClient))
+        
     def change_to_Inscrire(self):
         from Frontend.CreatAccount import CreatAccount
         self.destroy()
