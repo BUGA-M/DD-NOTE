@@ -213,7 +213,7 @@ DD-NOTE implémente plusieurs couches de sécurité :
                 <div style="border-radius: 50%; overflow: hidden; width: 100px; height: 100px;">
                     <img src="./Custom/pic/abdellah.png" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <a href="https://github.com/PATCH-BU"><img src="https://img.shields.io/badge/GitHub-PATCH-BU-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+                <a href="https://github.com/PATCH-BU"><img src="https://img.shields.io/badge/GitHub-PATCH--BU-181717?style=for-the-badge&logo=github&logoColor=white"></a>
             </td>
         </tr>
     </table>
