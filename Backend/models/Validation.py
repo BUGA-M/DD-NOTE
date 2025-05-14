@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from tkinter import messagebox
-from Backend.exceptions import MDPVideException,MDPCourtException,MajException,MinException,NumberException, CaractereException, MDPdiffException
+from Backend.exceptions import MDPVideException,MDPCourtException,MajException,MinException,NumberException, CaractereException, MDPdiffException,MDPException
 
 class Validation:
     @staticmethod
