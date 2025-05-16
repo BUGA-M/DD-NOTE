@@ -1,15 +1,33 @@
+[project]
+name = "DD-NOTE"
+version = "0.1.0"
+description = "Système de Gestion des Notes avec Authentification OTP"
+authors = [
+    { name="Youssef", email="Youssefnajmi890@gmail.com" }
+    { name="marouane", email="ggxini@gmail.com" }
+    { name="abdellah", email="abdollahbelgnaou37@gmail.com" }
+    { name="imad", email="imad.benjedi.06@gmail.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.11"
+
 [tool.black]
 line-length = 88
-target-version = ['py311']
+target-version = ["py311"]
 
 [tool.flake8]
 max-line-length = 88
 exclude = [
     ".git",
-    "__pycache__",
+    "_pycache_",
     "venv",
     "tests/*"
 ]
 
 [tool.bandit]
 exclude = ["tests", "venv"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
