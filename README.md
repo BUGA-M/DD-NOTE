@@ -225,7 +225,7 @@ DD-NOTE implémente plusieurs couches de sécurité :
 
 ### Nous sommes à votre écoute pour toute question ou suggestion !
 
-<a href="mailto:ddnote.ma@gmail.com"><img src="https://img.shields.io/badge/dd--note.ma.com-D14836?style=for-the-badge&logo=gmail&logoColor=white"></a>
+<a href="mailto:ddnote.ma@gmail.com"><img src="https://img.shields.io/badge/dd--note.ma%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white"></a>
 <a href="https://discord.gg/9Tdk89qyw5"><img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=for-the-badge&logo=discord&logoColor=white"></a>
 <a href="https://www.linkedin.com/company/dd-note"><img src="https://img.shields.io/badge/LinkedIn-Suivre-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a>
 
